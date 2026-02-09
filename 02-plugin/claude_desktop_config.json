@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "premium-calculator": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/claude-skills-plugins-cowork/02-plugin/dist/index.js"
+      ],
+      "env": {}
+    }
+  }
+}

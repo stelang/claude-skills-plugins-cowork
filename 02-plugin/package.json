@@ -1,0 +1,38 @@
+{
+  "name": "premium-calculator-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for insurance premium calculation with rate tables and underwriting guidelines",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "premium-calculator-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepare": "npm run build",
+    "postinstall": "node scripts/postinstall.js",
+    "setup": "node scripts/setup.js",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "insurance",
+    "premium",
+    "calculator",
+    "underwriting"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

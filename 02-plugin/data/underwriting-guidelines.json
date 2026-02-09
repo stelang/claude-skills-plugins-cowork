@@ -1,0 +1,195 @@
+{
+  "version": "2.1.0",
+  "lastUpdated": "2026-01-15",
+  "description": "Underwriting guidelines for risk assessment and pricing",
+  "riskFactors": {
+    "smoking": {
+      "current": {
+        "impact": "high",
+        "classAdjustment": "substandard",
+        "description": "Current smoker (any tobacco use in last 12 months)"
+      },
+      "former_recent": {
+        "impact": "medium",
+        "yearsSmokeFree": "1-5",
+        "classAdjustment": "standard",
+        "description": "Quit smoking within last 5 years"
+      },
+      "former_longterm": {
+        "impact": "low",
+        "yearsSmokeFree": "5+",
+        "classAdjustment": "preferred_eligible",
+        "description": "Quit smoking more than 5 years ago"
+      }
+    },
+    "bmi": {
+      "underweight": {
+        "range": "< 18.5",
+        "impact": "medium",
+        "classAdjustment": "standard",
+        "additionalReview": true
+      },
+      "normal": {
+        "range": "18.5-24.9",
+        "impact": "low",
+        "classAdjustment": "preferred_eligible"
+      },
+      "overweight": {
+        "range": "25-29.9",
+        "impact": "low",
+        "classAdjustment": "standard"
+      },
+      "obese_class1": {
+        "range": "30-34.9",
+        "impact": "medium",
+        "classAdjustment": "standard"
+      },
+      "obese_class2": {
+        "range": "35-39.9",
+        "impact": "high",
+        "classAdjustment": "substandard"
+      },
+      "obese_class3": {
+        "range": "40+",
+        "impact": "very_high",
+        "classAdjustment": "substandard",
+        "additionalSurcharge": 0.25
+      }
+    },
+    "bloodPressure": {
+      "normal": {
+        "systolic": "< 120",
+        "diastolic": "< 80",
+        "impact": "low",
+        "classAdjustment": "preferred_eligible"
+      },
+      "elevated": {
+        "systolic": "120-129",
+        "diastolic": "< 80",
+        "impact": "low",
+        "classAdjustment": "standard"
+      },
+      "stage1": {
+        "systolic": "130-139",
+        "diastolic": "80-89",
+        "impact": "medium",
+        "classAdjustment": "standard",
+        "requiresMedication": false
+      },
+      "stage2": {
+        "systolic": "140+",
+        "diastolic": "90+",
+        "impact": "high",
+        "classAdjustment": "substandard",
+        "requiresMedication": true
+      }
+    },
+    "familyHistory": {
+      "heart_disease": {
+        "impact": "medium",
+        "description": "First-degree relative with heart disease before age 60",
+        "classAdjustment": "standard"
+      },
+      "cancer": {
+        "impact": "medium",
+        "description": "First-degree relative with cancer before age 60",
+        "classAdjustment": "standard"
+      },
+      "diabetes": {
+        "impact": "medium",
+        "description": "First-degree relative with diabetes",
+        "classAdjustment": "standard"
+      },
+      "longevity": {
+        "impact": "positive",
+        "description": "Multiple relatives living past 85",
+        "classAdjustment": "preferred_eligible"
+      }
+    }
+  },
+  "occupationRatings": {
+    "low_risk": {
+      "examples": ["office worker", "teacher", "accountant", "software engineer"],
+      "adjustment": 1.0,
+      "description": "Desk jobs with minimal physical risk"
+    },
+    "moderate_risk": {
+      "examples": ["electrician", "plumber", "delivery driver", "construction supervisor"],
+      "adjustment": 1.05,
+      "description": "Some physical risk or occupational hazards"
+    },
+    "high_risk": {
+      "examples": ["roofer", "commercial pilot", "police officer", "firefighter"],
+      "adjustment": 1.15,
+      "description": "Significant occupational hazards"
+    },
+    "very_high_risk": {
+      "examples": ["deep sea diver", "blasting technician", "test pilot"],
+      "adjustment": 1.35,
+      "description": "Extreme occupational risk",
+      "requiresSpecialUnderwriting": true
+    }
+  },
+  "hobbies": {
+    "extreme_sports": {
+      "examples": ["skydiving", "rock climbing", "cave diving", "BASE jumping"],
+      "adjustment": 1.25,
+      "requiresDisclosure": true
+    },
+    "aviation": {
+      "examples": ["private pilot", "hang gliding", "ultralight aircraft"],
+      "adjustment": 1.15,
+      "requiresDisclosure": true
+    },
+    "motorsports": {
+      "examples": ["racing", "motorcycle track days"],
+      "adjustment": 1.20,
+      "requiresDisclosure": true
+    }
+  },
+  "ageSpecificRules": {
+    "under_30": {
+      "description": "Young applicants with clean health",
+      "preferredEligibility": "easier",
+      "notes": "Lower baseline risk, preferred class more accessible"
+    },
+    "30_to_50": {
+      "description": "Prime earning years",
+      "preferredEligibility": "standard",
+      "notes": "Most common applicant age range"
+    },
+    "50_to_65": {
+      "description": "Pre-retirement",
+      "preferredEligibility": "stricter",
+      "notes": "Health history becomes more important"
+    },
+    "over_65": {
+      "description": "Retirement age",
+      "preferredEligibility": "difficult",
+      "notes": "Preferred class requires exceptional health",
+      "additionalMedicalExams": true
+    }
+  },
+  "coverageSpecificRules": {
+    "under_500k": {
+      "medicalExamRequired": false,
+      "underwritingLevel": "simplified"
+    },
+    "500k_to_1m": {
+      "medicalExamRequired": true,
+      "underwritingLevel": "standard",
+      "requiredTests": ["blood panel", "blood pressure", "height/weight"]
+    },
+    "1m_to_3m": {
+      "medicalExamRequired": true,
+      "underwritingLevel": "detailed",
+      "requiredTests": ["comprehensive blood panel", "EKG", "urinalysis", "blood pressure", "height/weight"]
+    },
+    "over_3m": {
+      "medicalExamRequired": true,
+      "underwritingLevel": "extensive",
+      "requiredTests": ["comprehensive blood panel", "EKG", "stress test", "urinalysis", "blood pressure", "height/weight"],
+      "additionalRequirements": ["financial underwriting", "attending physician statement"]
+    }
+  }
+}

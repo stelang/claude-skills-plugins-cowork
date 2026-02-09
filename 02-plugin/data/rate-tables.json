@@ -1,0 +1,79 @@
+{
+  "version": "2026-Q1",
+  "effectiveDate": "2026-01-01",
+  "description": "Life insurance base rates per $1,000 of coverage per month",
+  "ageBrackets": [
+    {
+      "minAge": 18,
+      "maxAge": 30,
+      "baseRate": 0.15,
+      "description": "Young adult bracket"
+    },
+    {
+      "minAge": 31,
+      "maxAge": 40,
+      "baseRate": 0.25,
+      "description": "Early career bracket"
+    },
+    {
+      "minAge": 41,
+      "maxAge": 50,
+      "baseRate": 0.45,
+      "description": "Mid-career bracket"
+    },
+    {
+      "minAge": 51,
+      "maxAge": 60,
+      "baseRate": 0.85,
+      "description": "Pre-retirement bracket"
+    },
+    {
+      "minAge": 61,
+      "maxAge": 70,
+      "baseRate": 1.50,
+      "description": "Retirement age bracket"
+    },
+    {
+      "minAge": 71,
+      "maxAge": 80,
+      "baseRate": 2.50,
+      "description": "Senior bracket"
+    }
+  ],
+  "healthClasses": {
+    "preferred": {
+      "multiplier": 0.85,
+      "description": "Excellent health, non-smoker, good family history",
+      "requirements": [
+        "Non-smoker for 5+ years",
+        "BMI 18-25",
+        "No chronic conditions",
+        "Good blood pressure and cholesterol",
+        "No family history of major illness before age 60"
+      ]
+    },
+    "standard": {
+      "multiplier": 1.0,
+      "description": "Good health, minor conditions controlled",
+      "requirements": [
+        "Non-smoker or quit within 5 years",
+        "BMI 18-30",
+        "Controlled chronic conditions acceptable",
+        "Blood pressure and cholesterol within acceptable range"
+      ]
+    },
+    "substandard": {
+      "multiplier": 1.35,
+      "description": "Health concerns present, higher risk",
+      "requirements": [
+        "Smoker or recent smoker",
+        "BMI over 30",
+        "Multiple chronic conditions or poorly controlled",
+        "Family history of major illness"
+      ]
+    }
+  },
+  "minimumCoverage": 50000,
+  "maximumCoverage": 5000000,
+  "currency": "USD"
+}
