@@ -1,79 +1,85 @@
 {
   "version": "2026-Q1",
   "effectiveDate": "2026-01-01",
-  "description": "Life insurance base rates per $1,000 of coverage per month",
-  "ageBrackets": [
+  "description": "Shipping base rates per pound per 100 miles",
+  "distanceBrackets": [
     {
-      "minAge": 18,
-      "maxAge": 30,
-      "baseRate": 0.15,
-      "description": "Young adult bracket"
+      "minDistance": 1,
+      "maxDistance": 100,
+      "baseRate": 0.50,
+      "description": "Local delivery"
     },
     {
-      "minAge": 31,
-      "maxAge": 40,
-      "baseRate": 0.25,
-      "description": "Early career bracket"
+      "minDistance": 101,
+      "maxDistance": 300,
+      "baseRate": 0.75,
+      "description": "Regional delivery"
     },
     {
-      "minAge": 41,
-      "maxAge": 50,
-      "baseRate": 0.45,
-      "description": "Mid-career bracket"
+      "minDistance": 301,
+      "maxDistance": 600,
+      "baseRate": 1.00,
+      "description": "Inter-regional delivery"
     },
     {
-      "minAge": 51,
-      "maxAge": 60,
-      "baseRate": 0.85,
-      "description": "Pre-retirement bracket"
+      "minDistance": 601,
+      "maxDistance": 1000,
+      "baseRate": 1.35,
+      "description": "Long-distance delivery"
     },
     {
-      "minAge": 61,
-      "maxAge": 70,
-      "baseRate": 1.50,
-      "description": "Retirement age bracket"
+      "minDistance": 1001,
+      "maxDistance": 2000,
+      "baseRate": 1.75,
+      "description": "Cross-country delivery"
     },
     {
-      "minAge": 71,
-      "maxAge": 80,
-      "baseRate": 2.50,
-      "description": "Senior bracket"
+      "minDistance": 2001,
+      "maxDistance": 5000,
+      "baseRate": 2.25,
+      "description": "Coast-to-coast delivery"
     }
   ],
-  "healthClasses": {
-    "preferred": {
-      "multiplier": 0.85,
-      "description": "Excellent health, non-smoker, good family history",
-      "requirements": [
-        "Non-smoker for 5+ years",
-        "BMI 18-25",
-        "No chronic conditions",
-        "Good blood pressure and cholesterol",
-        "No family history of major illness before age 60"
+  "serviceTiers": {
+    "economy": {
+      "multiplier": 0.80,
+      "description": "Budget-friendly, longer delivery time",
+      "deliveryEstimate": "7-10 business days",
+      "features": [
+        "Ground transportation only",
+        "No weekend/holiday delivery",
+        "Basic tracking",
+        "Standard packaging"
       ]
     },
     "standard": {
       "multiplier": 1.0,
-      "description": "Good health, minor conditions controlled",
-      "requirements": [
-        "Non-smoker or quit within 5 years",
-        "BMI 18-30",
-        "Controlled chronic conditions acceptable",
-        "Blood pressure and cholesterol within acceptable range"
+      "description": "Balanced cost and speed",
+      "deliveryEstimate": "3-5 business days",
+      "features": [
+        "Ground and air transportation",
+        "Business day delivery",
+        "Enhanced tracking",
+        "Standard packaging",
+        "Signature on delivery available"
       ]
     },
-    "substandard": {
-      "multiplier": 1.35,
-      "description": "Health concerns present, higher risk",
-      "requirements": [
-        "Smoker or recent smoker",
-        "BMI over 30",
-        "Multiple chronic conditions or poorly controlled",
-        "Family history of major illness"
+    "express": {
+      "multiplier": 1.50,
+      "description": "Fastest delivery, premium cost",
+      "deliveryEstimate": "1-2 business days",
+      "features": [
+        "Priority air transportation",
+        "Weekend/holiday delivery available",
+        "Real-time tracking",
+        "Premium packaging",
+        "Signature required",
+        "Insurance included up to $500"
       ]
     }
   },
-  "minimumCoverage": 50000,
-  "maximumCoverage": 5000000,
+  "minimumWeight": 1,
+  "maximumWeight": 150,
+  "baseHandlingFee": 5.00,
   "currency": "USD"
 }

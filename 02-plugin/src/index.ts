@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Premium Calculator MCP Server
+ * Shipping Cost Calculator MCP Server
  *
- * This MCP server provides insurance premium calculation tools with access to:
+ * This MCP server provides shipping cost calculation tools with access to:
  * - Rate tables (JSON)
- * - Underwriting guidelines (JSON)
- * - Premium calculation with external data
+ * - Shipping rules (JSON)
+ * - Shipping cost calculation with external data
  */
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -28,33 +28,35 @@ const __dirname = path.dirname(__filename);
 const DATA_DIR = path.join(__dirname, "..", "data");
 
 // Type definitions
-interface AgeBracket {
-  minAge: number;
-  maxAge: number;
+interface DistanceBracket {
+  minDistance: number;
+  maxDistance: number;
   baseRate: number;
   description: string;
 }
 
-interface HealthClass {
+interface ServiceTier {
   multiplier: number;
   description: string;
-  requirements: string[];
+  deliveryEstimate: string;
+  features: string[];
 }
 
 interface RateTables {
   version: string;
   effectiveDate: string;
-  ageBrackets: AgeBracket[];
-  healthClasses: {
-    [key: string]: HealthClass;
+  distanceBrackets: DistanceBracket[];
+  serviceTiers: {
+    [key: string]: ServiceTier;
   };
-  minimumCoverage: number;
-  maximumCoverage: number;
+  minimumWeight: number;
+  maximumWeight: number;
+  baseHandlingFee: number;
 }
 
-// Cache for rate tables and guidelines
+// Cache for rate tables and shipping rules
 let rateTables: RateTables | null = null;
-let underwritingGuidelines: any = null;
+let shippingRules: any = null;
 
 /**
  * Load rate tables from JSON file
@@ -69,173 +71,176 @@ async function loadRateTables(): Promise<RateTables> {
 }
 
 /**
- * Load underwriting guidelines from JSON file
+ * Load shipping rules from JSON file
  */
-async function loadUnderwritingGuidelines(): Promise<any> {
-  if (underwritingGuidelines) return underwritingGuidelines;
+async function loadShippingRules(): Promise<any> {
+  if (shippingRules) return shippingRules;
 
-  const filePath = path.join(DATA_DIR, "underwriting-guidelines.json");
+  const filePath = path.join(DATA_DIR, "shipping-rules.json");
   const content = await fs.readFile(filePath, "utf-8");
-  underwritingGuidelines = JSON.parse(content);
-  return underwritingGuidelines;
+  shippingRules = JSON.parse(content);
+  return shippingRules;
 }
 
 /**
- * Calculate premium based on age, coverage, and health class
+ * Calculate shipping cost based on weight, distance, and service tier
  */
-function calculatePremium(
-  age: number,
-  coverage: number,
-  healthClass: string,
+function calculateShippingCost(
+  weight: number,
+  distance: number,
+  serviceTier: string,
   rateTables: RateTables
 ): {
-  monthlyPremium: number;
-  annualPremium: number;
+  totalCost: number;
+  shippingCost: number;
   baseRate: number;
-  healthMultiplier: number;
+  tierMultiplier: number;
   adjustedRate: number;
+  handlingFee: number;
+  deliveryEstimate: string;
 } {
-  // Find age bracket
-  const bracket = rateTables.ageBrackets.find(
-    (b) => age >= b.minAge && age <= b.maxAge
+  // Find distance bracket
+  const bracket = rateTables.distanceBrackets.find(
+    (b) => distance >= b.minDistance && distance <= b.maxDistance
   );
 
   if (!bracket) {
-    throw new Error(`Age ${age} is outside acceptable range (18-80)`);
+    throw new Error(`Distance ${distance} is outside acceptable range`);
   }
 
-  // Get health class multiplier
-  const healthClassKey = healthClass.toLowerCase();
-  const healthInfo = rateTables.healthClasses[healthClassKey];
+  // Get service tier multiplier
+  const tierKey = serviceTier.toLowerCase();
+  const tierInfo = rateTables.serviceTiers[tierKey];
 
-  if (!healthInfo) {
+  if (!tierInfo) {
     throw new Error(
-      `Invalid health class: ${healthClass}. Must be one of: ${Object.keys(
-        rateTables.healthClasses
+      `Invalid service tier: ${serviceTier}. Must be one of: ${Object.keys(
+        rateTables.serviceTiers
       ).join(", ")}`
     );
   }
 
-  // Calculate premium
-  const coverageInThousands = coverage / 1000;
+  // Calculate shipping cost
+  const distanceUnits = distance / 100;
   const baseRate = bracket.baseRate;
-  const healthMultiplier = healthInfo.multiplier;
-  const adjustedRate = baseRate * healthMultiplier;
-  const monthlyPremium = coverageInThousands * adjustedRate;
-  const annualPremium = monthlyPremium * 12;
+  const tierMultiplier = tierInfo.multiplier;
+  const adjustedRate = baseRate * tierMultiplier;
+  const shippingCost = weight * distanceUnits * adjustedRate;
+  const handlingFee = rateTables.baseHandlingFee;
+  const totalCost = shippingCost + handlingFee;
 
   return {
-    monthlyPremium,
-    annualPremium,
+    totalCost,
+    shippingCost,
     baseRate,
-    healthMultiplier,
+    tierMultiplier,
     adjustedRate,
+    handlingFee,
+    deliveryEstimate: tierInfo.deliveryEstimate,
   };
 }
 
 /**
- * Get underwriting recommendation based on risk factors
+ * Get shipping recommendation based on package characteristics
  */
-function getUnderwritingRecommendation(
-  age: number,
-  coverage: number,
-  riskFactors: {
-    smoker?: string;
-    bmi?: number;
-    bloodPressure?: { systolic: number; diastolic: number };
-    occupation?: string;
-    hobbies?: string[];
+function getShippingRecommendation(
+  weight: number,
+  packageCharacteristics: {
+    fragility?: string;
+    perishability?: string;
+    size?: string;
+    hazmat?: string;
+    destination?: string;
   },
-  guidelines: any
+  rules: any
 ): {
-  recommendedClass: string;
-  requiredTests: string[];
-  additionalAdjustments: number;
+  recommendedTier: string;
+  totalSurcharges: number;
+  requirements: string[];
   notes: string[];
 } {
   const notes: string[] = [];
-  let recommendedClass = "standard";
-  let additionalAdjustments = 1.0;
-  let requiredTests: string[] = [];
+  let recommendedTier = "standard";
+  let totalSurcharges = 0;
+  let requirements: string[] = [];
 
-  // Determine coverage-based requirements
-  if (coverage < 500000) {
-    requiredTests = guidelines.coverageSpecificRules.under_500k.requiredTests || [];
-  } else if (coverage <= 1000000) {
-    requiredTests = guidelines.coverageSpecificRules["500k_to_1m"].requiredTests;
-  } else if (coverage <= 3000000) {
-    requiredTests = guidelines.coverageSpecificRules["1m_to_3m"].requiredTests;
-  } else {
-    requiredTests = guidelines.coverageSpecificRules.over_3m.requiredTests;
+  // Check weight tier
+  if (weight > 100) {
+    const tier = rules.weightTiers.very_heavy;
+    totalSurcharges += tier.surcharge || 0;
+    notes.push(tier.description);
+    if (tier.requirements) {
+      requirements.push(...tier.requirements);
+    }
+  } else if (weight > 50) {
+    const tier = rules.weightTiers.heavy;
+    totalSurcharges += tier.surcharge || 0;
+    notes.push(tier.description);
   }
 
-  // Check smoking status
-  if (riskFactors.smoker === "current") {
-    recommendedClass = "substandard";
-    notes.push("Current smoker - substandard classification required");
-  } else if (riskFactors.smoker === "former_recent") {
-    notes.push("Recent former smoker - may qualify for standard");
-  } else if (riskFactors.smoker === "former_longterm") {
-    notes.push("Long-term non-smoker - preferred class eligible");
-  }
-
-  // Check BMI
-  if (riskFactors.bmi) {
-    if (riskFactors.bmi >= 40) {
-      recommendedClass = "substandard";
-      additionalAdjustments *= 1.25;
-      notes.push("BMI over 40 - substandard with additional surcharge");
-    } else if (riskFactors.bmi >= 35) {
-      if (recommendedClass !== "substandard") {
-        recommendedClass = "substandard";
-      }
-      notes.push("BMI 35-40 - substandard classification");
-    } else if (riskFactors.bmi >= 30) {
-      notes.push("BMI 30-35 - standard classification");
-    } else if (riskFactors.bmi >= 18.5 && riskFactors.bmi < 25) {
-      notes.push("Normal BMI - preferred class eligible");
+  // Check fragility
+  if (packageCharacteristics.fragility === "fragile") {
+    const fragile = rules.packageCharacteristics.fragility.fragile;
+    totalSurcharges += fragile.surcharge;
+    notes.push(fragile.description);
+    if (fragile.tierRecommendation !== "any") {
+      recommendedTier = "standard";
+      notes.push("Standard or Express tier recommended for fragile items");
+    }
+    if (fragile.requirements) {
+      requirements.push(...fragile.requirements);
     }
   }
 
-  // Check blood pressure
-  if (riskFactors.bloodPressure) {
-    const { systolic, diastolic } = riskFactors.bloodPressure;
-    if (systolic >= 140 || diastolic >= 90) {
-      recommendedClass = "substandard";
-      notes.push("Stage 2 hypertension - substandard classification");
-    } else if (systolic >= 130 || diastolic >= 80) {
-      notes.push("Stage 1 hypertension - standard classification");
+  // Check perishability
+  if (packageCharacteristics.perishability === "perishable") {
+    const perishable = rules.packageCharacteristics.perishability.perishable;
+    totalSurcharges += perishable.surcharge;
+    recommendedTier = "express";
+    notes.push(perishable.description);
+    notes.push("Express shipping REQUIRED for perishable items");
+    if (perishable.requirements) {
+      requirements.push(...perishable.requirements);
     }
   }
 
-  // Check occupation
-  if (riskFactors.occupation) {
-    const occLower = riskFactors.occupation.toLowerCase();
-    for (const [risk, info] of Object.entries(guidelines.occupationRatings)) {
-      if ((info as any).examples.some((ex: string) => occLower.includes(ex.toLowerCase()))) {
-        additionalAdjustments *= (info as any).adjustment;
-        if ((info as any).adjustment > 1.0) {
-          notes.push(`${risk.replace('_', ' ')} occupation - ${((info as any).adjustment - 1) * 100}% surcharge`);
-        }
+  // Check size
+  if (packageCharacteristics.size === "oversized") {
+    const oversized = rules.packageCharacteristics.size.oversized;
+    totalSurcharges += oversized.surcharge;
+    notes.push(oversized.description);
+  }
+
+  // Check hazmat
+  if (packageCharacteristics.hazmat && packageCharacteristics.hazmat !== "none") {
+    const hazmatType = rules.packageCharacteristics.hazmat[packageCharacteristics.hazmat];
+    if (hazmatType) {
+      totalSurcharges += hazmatType.surcharge;
+      recommendedTier = "economy";  // Ground only
+      notes.push(hazmatType.description);
+      notes.push("Ground transportation ONLY for hazardous materials");
+      if (hazmatType.requirements) {
+        requirements.push(...hazmatType.requirements);
       }
     }
   }
 
-  // Check hobbies
-  if (riskFactors.hobbies && riskFactors.hobbies.length > 0) {
-    for (const hobby of riskFactors.hobbies) {
-      const hobbyLower = hobby.toLowerCase();
-      if (guidelines.hobbies.extreme_sports.examples.some((ex: string) => hobbyLower.includes(ex.toLowerCase()))) {
-        additionalAdjustments *= guidelines.hobbies.extreme_sports.adjustment;
-        notes.push(`Extreme sports hobby - ${(guidelines.hobbies.extreme_sports.adjustment - 1) * 100}% surcharge`);
+  // Check destination
+  if (packageCharacteristics.destination) {
+    const dest = rules.destinationFactors[packageCharacteristics.destination];
+    if (dest) {
+      totalSurcharges += dest.surcharge || 0;
+      notes.push(dest.description);
+      if (dest.restrictions) {
+        requirements.push(...dest.restrictions);
       }
     }
   }
 
   return {
-    recommendedClass,
-    requiredTests,
-    additionalAdjustments,
+    recommendedTier,
+    totalSurcharges,
+    requirements,
     notes,
   };
 }
@@ -243,7 +248,7 @@ function getUnderwritingRecommendation(
 // Create MCP server
 const server = new Server(
   {
-    name: "premium-calculator",
+    name: "shipping-calculator",
     version: "1.0.0",
   },
   {
@@ -262,13 +267,13 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
         uri: "file:///rate-tables",
         mimeType: "application/json",
         name: "Rate Tables",
-        description: "Insurance premium rate tables with age brackets and health class multipliers",
+        description: "Shipping rate tables with distance brackets and service tier multipliers",
       },
       {
-        uri: "file:///underwriting-guidelines",
+        uri: "file:///shipping-rules",
         mimeType: "application/json",
-        name: "Underwriting Guidelines",
-        description: "Complete underwriting guidelines including risk factors and requirements",
+        name: "Shipping Rules",
+        description: "Complete shipping rules including package characteristics and surcharges",
       },
     ],
   };
@@ -291,14 +296,14 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
     };
   }
 
-  if (uri === "file:///underwriting-guidelines") {
-    const guidelines = await loadUnderwritingGuidelines();
+  if (uri === "file:///shipping-rules") {
+    const rules = await loadShippingRules();
     return {
       contents: [
         {
           uri,
           mimeType: "application/json",
-          text: JSON.stringify(guidelines, null, 2),
+          text: JSON.stringify(rules, null, 2),
         },
       ],
     };
@@ -312,78 +317,74 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
       {
-        name: "calculate_premium",
-        description: "Calculate insurance premium using current rate tables and health classifications",
+        name: "calculate_shipping_cost",
+        description: "Calculate shipping cost using current rate tables and service tiers",
         inputSchema: {
           type: "object",
           properties: {
-            age: {
+            weight: {
               type: "number",
-              description: "Applicant age (18-80)",
-              minimum: 18,
-              maximum: 80,
+              description: "Package weight in pounds (1-150 lbs)",
+              minimum: 1,
+              maximum: 150,
             },
-            coverage: {
+            distance: {
               type: "number",
-              description: "Coverage amount in dollars (minimum $50,000)",
-              minimum: 50000,
+              description: "Shipping distance in miles (minimum 1)",
+              minimum: 1,
             },
-            healthClass: {
+            serviceTier: {
               type: "string",
-              description: "Health classification: preferred, standard, or substandard",
-              enum: ["preferred", "standard", "substandard"],
+              description: "Service tier: economy, standard, or express",
+              enum: ["economy", "standard", "express"],
             },
           },
-          required: ["age", "coverage", "healthClass"],
+          required: ["weight", "distance", "serviceTier"],
         },
       },
       {
-        name: "get_underwriting_recommendation",
-        description: "Get underwriting recommendation and required tests based on risk factors",
+        name: "get_shipping_recommendation",
+        description: "Get shipping recommendations and surcharges based on package characteristics",
         inputSchema: {
           type: "object",
           properties: {
-            age: {
+            weight: {
               type: "number",
-              description: "Applicant age",
+              description: "Package weight in pounds",
             },
-            coverage: {
-              type: "number",
-              description: "Coverage amount in dollars",
-            },
-            riskFactors: {
+            packageCharacteristics: {
               type: "object",
-              description: "Risk factors for underwriting assessment",
+              description: "Package characteristics for assessment",
               properties: {
-                smoker: {
+                fragility: {
                   type: "string",
-                  enum: ["current", "former_recent", "former_longterm", "never"],
-                  description: "Smoking status",
+                  enum: ["fragile", "standard", "robust"],
+                  description: "Package fragility level",
                 },
-                bmi: {
-                  type: "number",
-                  description: "Body Mass Index",
-                },
-                bloodPressure: {
-                  type: "object",
-                  properties: {
-                    systolic: { type: "number" },
-                    diastolic: { type: "number" },
-                  },
-                },
-                occupation: {
+                perishability: {
                   type: "string",
-                  description: "Current occupation",
+                  enum: ["perishable", "non_perishable"],
+                  description: "Whether package contains perishable items",
                 },
-                hobbies: {
-                  type: "array",
-                  items: { type: "string" },
-                  description: "List of hobbies/activities",
+                size: {
+                  type: "string",
+                  enum: ["standard", "oversized"],
+                  description: "Package size classification",
+                },
+                hazmat: {
+                  type: "string",
+                  enum: ["none", "flammable", "corrosive"],
+                  description: "Hazardous materials classification",
+                },
+                destination: {
+                  type: "string",
+                  enum: ["commercial", "residential", "rural", "po_box"],
+                  description: "Destination type",
                 },
               },
             },
           },
-          required: ["age", "coverage", "riskFactors"],
+          required: ["weight", "packageCharacteristics"],
         },
       },
       {
@@ -403,29 +404,25 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   try {
-    if (name === "calculate_premium") {
-      const { age, coverage, healthClass } = args as {
-        age: number;
-        coverage: number;
-        healthClass: string;
+    if (name === "calculate_shipping_cost") {
+      const { weight, distance, serviceTier } = args as {
+        weight: number;
+        distance: number;
+        serviceTier: string;
       };
 
       const tables = await loadRateTables();
 
       // Validate inputs
-      if (age < 18 || age > 80) {
-        throw new Error("Age must be between 18 and 80");
+      if (weight < tables.minimumWeight || weight > tables.maximumWeight) {
+        throw new Error(`Weight must be between ${tables.minimumWeight} and ${tables.maximumWeight} lbs`);
       }
 
-      if (coverage < tables.minimumCoverage) {
-        throw new Error(`Coverage must be at least $${tables.minimumCoverage.toLocaleString()}`);
+      if (distance < 1) {
+        throw new Error("Distance must be at least 1 mile");
       }
 
-      if (coverage > tables.maximumCoverage) {
-        throw new Error(`Coverage cannot exceed $${tables.maximumCoverage.toLocaleString()}`);
-      }
-
-      const result = calculatePremium(age, coverage, healthClass, tables);
+      const result = calculateShippingCost(weight, distance, serviceTier, tables);
 
       return {
         content: [
@@ -434,13 +431,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             text: JSON.stringify(
               {
                 success: true,
-                input: { age, coverage, healthClass },
+                input: { weight, distance, serviceTier },
                 result: {
-                  monthlyPremium: result.monthlyPremium.toFixed(2),
-                  annualPremium: result.annualPremium.toFixed(2),
+                  totalCost: result.totalCost.toFixed(2),
+                  shippingCost: result.shippingCost.toFixed(2),
+                  handlingFee: result.handlingFee.toFixed(2),
                   baseRate: result.baseRate,
-                  healthMultiplier: result.healthMultiplier,
+                  tierMultiplier: result.tierMultiplier,
                   adjustedRate: result.adjustedRate,
+                  deliveryEstimate: result.deliveryEstimate,
                 },
                 rateTableVersion: tables.version,
                 effectiveDate: tables.effectiveDate,
@@ -453,19 +452,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       };
     }
 
-    if (name === "get_underwriting_recommendation") {
-      const { age, coverage, riskFactors } = args as {
-        age: number;
-        coverage: number;
-        riskFactors: any;
+    if (name === "get_shipping_recommendation") {
+      const { weight, packageCharacteristics } = args as {
+        weight: number;
+        packageCharacteristics: any;
       };
 
-      const guidelines = await loadUnderwritingGuidelines();
-      const recommendation = getUnderwritingRecommendation(
-        age,
-        coverage,
-        riskFactors,
-        guidelines
+      const rules = await loadShippingRules();
+      const recommendation = getShippingRecommendation(
+        weight,
+        packageCharacteristics,
+        rules
       );
 
       return {
@@ -475,7 +472,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             text: JSON.stringify(
               {
                 success: true,
-                input: { age, coverage, riskFactors },
+                input: { weight, packageCharacteristics },
                 recommendation,
               },
               null,
@@ -498,12 +495,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 success: true,
                 version: tables.version,
                 effectiveDate: tables.effectiveDate,
-                ageBrackets: tables.ageBrackets.length,
-                healthClasses: Object.keys(tables.healthClasses),
-                coverageRange: {
-                  minimum: tables.minimumCoverage,
-                  maximum: tables.maximumCoverage,
+                distanceBrackets: tables.distanceBrackets.length,
+                serviceTiers: Object.keys(tables.serviceTiers),
+                weightRange: {
+                  minimum: tables.minimumWeight,
+                  maximum: tables.maximumWeight,
                 },
+                baseHandlingFee: tables.baseHandlingFee,
               },
               null,
               2
@@ -538,7 +536,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Premium Calculator MCP Server running on stdio");
+  console.error("Shipping Cost Calculator MCP Server running on stdio");
 }
 
 main().catch((error) => {

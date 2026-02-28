@@ -1,11 +1,11 @@
 {
   "mcpServers": {
     "shipping-calculator": {
+      "type": "stdio",
       "command": "node",
       "args": [
         "/Users/stelang/code/claude-skills-plugins-cowork/02-plugin/dist/index.js"
-      ],
-      "env": {}
+      ]
     }
   }
 }

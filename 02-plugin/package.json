@@ -1,11 +1,11 @@
 {
-  "name": "premium-calculator-mcp-server",
+  "name": "shipping-calculator-mcp-server",
   "version": "1.0.0",
-  "description": "MCP server for insurance premium calculation with rate tables and underwriting guidelines",
+  "description": "MCP server for shipping cost calculation with rate tables and shipping rules",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "premium-calculator-mcp": "./dist/index.js"
+    "shipping-calculator-mcp": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -18,10 +18,10 @@
   },
   "keywords": [
     "mcp",
-    "insurance",
-    "premium",
+    "shipping",
+    "logistics",
     "calculator",
-    "underwriting"
+    "cost-estimation"
   ],
   "author": "",
   "license": "MIT",

@@ -1,0 +1,215 @@
+{
+  "version": "2.1.0",
+  "lastUpdated": "2026-01-15",
+  "description": "Shipping rules for package assessment and cost adjustments",
+  "packageCharacteristics": {
+    "fragility": {
+      "fragile": {
+        "impact": "high",
+        "surcharge": 15.00,
+        "tierRecommendation": "standard_or_express",
+        "description": "Breakable items requiring special handling (glass, ceramics, electronics)",
+        "requirements": [
+          "Extra padding required",
+          "Fragile stickers on all sides",
+          "May require signature on delivery"
+        ]
+      },
+      "standard": {
+        "impact": "low",
+        "surcharge": 0,
+        "tierRecommendation": "any",
+        "description": "Standard durability items"
+      },
+      "robust": {
+        "impact": "low",
+        "surcharge": 0,
+        "tierRecommendation": "any",
+        "description": "Highly durable items (books, tools, metal goods)"
+      }
+    },
+    "perishability": {
+      "perishable": {
+        "impact": "very_high",
+        "surcharge": 25.00,
+        "tierRecommendation": "express_only",
+        "description": "Food, pharmaceuticals, or time-sensitive items",
+        "requirements": [
+          "Express shipping required",
+          "Temperature-controlled packaging",
+          "Delivery within 48 hours mandatory"
+        ]
+      },
+      "non_perishable": {
+        "impact": "low",
+        "surcharge": 0,
+        "tierRecommendation": "any",
+        "description": "Items with no time sensitivity"
+      }
+    },
+    "size": {
+      "oversized": {
+        "threshold": "Over 96 inches in combined length + girth",
+        "impact": "high",
+        "surcharge": 50.00,
+        "description": "Large or bulky items requiring special handling",
+        "additionalMultiplier": 1.25
+      },
+      "standard": {
+        "threshold": "Up to 96 inches in combined length + girth",
+        "impact": "low",
+        "surcharge": 0,
+        "description": "Standard package dimensions"
+      }
+    },
+    "hazmat": {
+      "flammable": {
+        "impact": "very_high",
+        "surcharge": 75.00,
+        "tierRecommendation": "ground_only",
+        "description": "Flammable liquids or gases",
+        "requirements": [
+          "Special permits required",
+          "Ground transportation only",
+          "Hazmat certification needed",
+          "Additional insurance mandatory"
+        ]
+      },
+      "corrosive": {
+        "impact": "very_high",
+        "surcharge": 75.00,
+        "tierRecommendation": "ground_only",
+        "description": "Corrosive materials (acids, batteries)",
+        "requirements": [
+          "Special permits required",
+          "Ground transportation only",
+          "Hazmat certification needed"
+        ]
+      },
+      "none": {
+        "impact": "low",
+        "surcharge": 0,
+        "tierRecommendation": "any",
+        "description": "Non-hazardous materials"
+      }
+    }
+  },
+  "destinationFactors": {
+    "rural": {
+      "impact": "medium",
+      "surcharge": 20.00,
+      "description": "Remote or rural delivery address",
+      "deliveryTimeAdjustment": "+2-3 business days"
+    },
+    "residential": {
+      "impact": "low",
+      "surcharge": 5.00,
+      "description": "Residential delivery address"
+    },
+    "commercial": {
+      "impact": "low",
+      "surcharge": 0,
+      "description": "Commercial or business address"
+    },
+    "po_box": {
+      "impact": "medium",
+      "surcharge": 0,
+      "tierRecommendation": "economy_or_standard",
+      "description": "PO Box delivery (express not available)",
+      "restrictions": [
+        "Express shipping not available",
+        "Size restrictions apply"
+      ]
+    }
+  },
+  "seasonalFactors": {
+    "peak_season": {
+      "months": ["November", "December"],
+      "impact": "medium",
+      "surcharge": 10.00,
+      "description": "Holiday peak season shipping",
+      "deliveryTimeAdjustment": "+1-2 business days"
+    },
+    "weather_delay_season": {
+      "months": ["January", "February"],
+      "impact": "low",
+      "surcharge": 0,
+      "description": "Potential weather delays",
+      "deliveryTimeAdjustment": "+0-2 business days (weather dependent)"
+    }
+  },
+  "insuranceOptions": {
+    "basic": {
+      "coverage": 100,
+      "cost": 0,
+      "description": "Basic coverage included with all shipments"
+    },
+    "standard": {
+      "coverage": 500,
+      "cost": 5.00,
+      "description": "Standard insurance coverage"
+    },
+    "premium": {
+      "coverage": 2500,
+      "cost": 15.00,
+      "description": "Premium insurance coverage"
+    },
+    "custom": {
+      "coverage": "User specified",
+      "costFormula": "1% of declared value above $2,500",
+      "description": "Custom insurance for high-value items"
+    }
+  },
+  "weightTiers": {
+    "light": {
+      "range": "1-10 lbs",
+      "impact": "low",
+      "description": "Light packages, standard handling"
+    },
+    "medium": {
+      "range": "11-50 lbs",
+      "impact": "low",
+      "description": "Medium packages, standard handling"
+    },
+    "heavy": {
+      "range": "51-100 lbs",
+      "impact": "medium",
+      "surcharge": 10.00,
+      "description": "Heavy packages, may require team lift"
+    },
+    "very_heavy": {
+      "range": "101-150 lbs",
+      "impact": "high",
+      "surcharge": 25.00,
+      "description": "Very heavy packages, team lift required",
+      "requirements": [
+        "Team lift required",
+        "Delivery to threshold only (not inside residence)",
+        "Commercial address preferred"
+      ]
+    }
+  },
+  "deliveryOptions": {
+    "standard": {
+      "cost": 0,
+      "description": "Delivery during normal business hours"
+    },
+    "signature_required": {
+      "cost": 5.00,
+      "description": "Signature required on delivery"
+    },
+    "adult_signature": {
+      "cost": 10.00,
+      "description": "Adult signature (21+) required"
+    },
+    "weekend_delivery": {
+      "cost": 20.00,
+      "description": "Saturday or Sunday delivery",
+      "tierAvailability": "Express only"
+    },
+    "hold_at_facility": {
+      "cost": 0,
+      "description": "Hold package at carrier facility for pickup"
+    }
+  }
+}

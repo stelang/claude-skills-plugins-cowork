@@ -1,16 +1,16 @@
 # Part 1: Building Your First Claude Skill
 
-This directory contains all the code and examples for **Part 1** of the blog series: "From Skills to Cowork: Understanding Claude's AI Capabilities Through Insurance Examples."
+This directory contains all the code and examples for **Part 1** of the blog series: "From Skills to Cowork: Understanding Claude's AI Capabilities Through Shipping Examples."
 
 ## What's in This Part
 
 ### 1. The Skill Implementation
-**Location:** `../.claude/skills/premium-calculator.md`
+**Location:** `../.claude/skills/shipping-calculator/SKILL.md`
 
-A complete Claude Skill that calculates life insurance premiums based on:
-- Age (18-80)
-- Coverage amount (minimum $50,000)
-- Health classification (Preferred, Standard, Substandard)
+A complete Claude Skill that calculates shipping costs based on:
+- Weight (1-150 lbs)
+- Distance (minimum 1 mile)
+- Service tier (Economy, Standard, Express)
 
 ### 2. Test Cases
 **Location:** `test-cases.md`
@@ -27,7 +27,7 @@ Comprehensive test cases including:
 
 1. **Ensure the skill file exists:**
    ```bash
-   ls .claude/skills/premium-calculator.md
+   ls .claude/skills/shipping-calculator/SKILL.md
    ```
 
 2. **Open Claude Code in this directory**
@@ -36,59 +36,61 @@ Comprehensive test cases including:
 
 **Method 1: Direct invocation**
 ```
-Use the premium-calculator skill to calculate a quote for:
-- Age: 45
-- Coverage: $500,000
-- Health Class: Standard
+Use the shipping-calculator skill to calculate a quote for:
+- Weight: 25 lbs
+- Distance: 450 miles
+- Service Tier: Standard
 ```
 
 **Method 2: Batch testing**
 ```
-Run all test cases from 01-skill/test-cases.md using the premium-calculator skill
+Run all test cases from 01-skill/test-cases.md using the shipping-calculator skill
 ```
 
 ### Expected Output Example
 
 ```
-PREMIUM CALCULATION RESULTS
+SHIPPING COST CALCULATION
 ===========================
 Input Summary:
-  Age: 45
-  Coverage Amount: $500,000
-  Health Class: Standard
+  Weight: 25 lbs
+  Distance: 450 miles
+  Service Tier: Standard
 
 Calculation Details:
-  Base Rate (per $1,000): $0.45
-  Health Class Multiplier: 1.0
-  Adjusted Rate: $0.45
+  Base Rate (per lb per 100 mi): $1.00
+  Service Tier Multiplier: 1.0
+  Adjusted Rate: $1.00
+  Base Handling Fee: $5.00
 
-PREMIUMS:
-  Monthly: $225.00
-  Annual: $2,700.00
+TOTAL SHIPPING COST: $117.50
+Estimated Delivery: 3-5 business days
 ```
 
 ## Understanding the Skill
 
 ### Rate Structure
 
-**Age-based rates (per $1,000 of coverage/month):**
-- 18-30: $0.15
-- 31-40: $0.25
-- 41-50: $0.45
-- 51-60: $0.85
-- 61-70: $1.50
-- 71-80: $2.50
+**Distance-based rates (per lb per 100 miles):**
+- 1-100 miles: $0.50
+- 101-300 miles: $0.75
+- 301-600 miles: $1.00
+- 601-1000 miles: $1.35
+- 1001-2000 miles: $1.75
+- 2001+ miles: $2.25
 
-**Health class multipliers:**
-- Preferred: 0.85 (15% discount)
-- Standard: 1.0 (baseline)
-- Substandard: 1.35 (35% surcharge)
+**Service tier multipliers:**
+- Economy: 0.80 (20% discount, 7-10 business days)
+- Standard: 1.0 (baseline, 3-5 business days)
+- Express: 1.50 (50% premium, 1-2 business days)
 
 ### Calculation Formula
 
 ```
-monthly_premium = (coverage / 1000) × base_rate × health_multiplier
-annual_premium = monthly_premium × 12
+distance_units = distance / 100
+adjusted_rate = base_rate × tier_multiplier
+shipping_cost = weight × distance_units × adjusted_rate
+total_cost = shipping_cost + 5.00 (base handling fee)
 ```
 
 ## Key Skill Design Principles
@@ -111,18 +113,18 @@ This skill demonstrates important design patterns:
 - Perfect for demonstration and testing
 
 **In Part 2 (Plugin), we'll extend this to:**
-- Read actual rate tables from Excel files
-- Access underwriting guidelines from databases
-- Fetch real-time mortality data from APIs
-- Handle complex multi-source data integration
+- Read actual rate tables from JSON files
+- Access shipping rules from external data sources
+- Handle complex package characteristics
+- Support multiple specialized tools and resources
 
 ## Common Issues and Solutions
 
 ### Issue: Skill not found
-**Solution:** Ensure the file is in `.claude/skills/` directory and Claude Code is running in the correct directory.
+**Solution:** Ensure the file is in `.claude/skills/shipping-calculator/` directory and Claude Code is running in the correct directory.
 
 ### Issue: Calculation doesn't match expected
-**Solution:** Check the age bracket - boundaries are inclusive. Age 30 uses 18-30 bracket, age 31 uses 31-40 bracket.
+**Solution:** Check the distance bracket - boundaries are inclusive. Distance 100 uses 1-100 bracket, distance 101 uses 101-300 bracket.
 
 ### Issue: Error handling not working
 **Solution:** The skill should validate inputs before calculation. If validation isn't triggering, check the skill file syntax.
@@ -131,12 +133,13 @@ This skill demonstrates important design patterns:
 
 Before moving to Part 2, verify:
 
-- [ ] Skill successfully calculates premiums for all valid test cases
+- [ ] Skill successfully calculates shipping costs for all valid test cases
 - [ ] Error cases produce clear, helpful messages
 - [ ] Output formatting is consistent
-- [ ] Health class matching is case-insensitive
-- [ ] Boundary conditions (ages 18, 30, 40, 50, 60, 70, 80) work correctly
-- [ ] Large coverage amounts (e.g., $1M+) calculate correctly
+- [ ] Service tier matching is case-insensitive
+- [ ] Boundary conditions (distances 100, 300, 600, 1000, 2000) work correctly
+- [ ] Heavy packages (100+ lbs) calculate correctly
+- [ ] Very long distances (2000+ miles) calculate correctly
 
 ## Next Steps
 
@@ -144,31 +147,34 @@ Once you've tested this skill thoroughly:
 
 1. **Read the blog post:** `../blog-part-1-overview-and-skill.md`
 2. **Experiment:** Try modifying the rate formulas
-3. **Extend:** Add new health classes or age brackets
+3. **Extend:** Add new service tiers or distance brackets
 4. **Prepare for Part 2:** Where we'll add external data access via Plugins
 
 ## Educational Notes
 
-**Important:** The rates and formulas used in this skill are simplified for educational purposes. Real insurance pricing involves:
-- Medical underwriting
-- Mortality tables
-- Lapse assumptions
-- Expense loadings
-- Profit margins
-- Regulatory requirements
-- Competitive positioning
+**Important:** The rates and formulas used in this skill are simplified for educational purposes. Real shipping cost calculation involves:
+- Real-time carrier rate shopping
+- Dimensional weight calculations
+- Fuel surcharges
+- Residential/commercial delivery fees
+- Zone-based pricing
+- Volume discounts
+- Address validation
+- Package insurance
 
-This skill demonstrates the **concept** of premium calculation, not actual industry practice.
+This skill demonstrates the **concept** of shipping cost calculation, not actual industry practice.
 
 ## Files in This Directory
 
 ```
 01-skill/
 ├── README.md           (this file)
-└── test-cases.md       (comprehensive test scenarios)
+├── test-cases.md       (comprehensive test scenarios)
+└── demo-script.md      (demo scenarios)
 
 ../.claude/skills/
-└── premium-calculator.md  (the actual skill implementation)
+└── shipping-calculator/
+    └── SKILL.md        (the actual skill implementation)
 ```
 
 ## Related Blog Post

@@ -1,13 +1,13 @@
-# Part 2: Building a Premium Calculator MCP Plugin
+# Part 2: Building a Shipping Calculator MCP Plugin
 
 This directory contains all the code and documentation for **Part 2** of the blog series: "From Skills to Cowork - Building an MCP Plugin."
 
 ## What's New in Part 2
 
-In Part 1, we built a simple **Skill** that calculated premiums using hardcoded formulas. In Part 2, we're upgrading to a **Plugin (MCP Server)** that:
+In Part 1, we built a simple **Skill** that calculated shipping costs using hardcoded formulas. In Part 2, we're upgrading to a **Plugin (MCP Server)** that:
 
 - ✅ Reads actual rate tables from external JSON files
-- ✅ Accesses comprehensive underwriting guidelines
+- ✅ Accesses comprehensive shipping rules
 - ✅ Provides multiple tools for calculation and assessment
 - ✅ Exposes resources that Claude can read and reason about
 - ✅ Demonstrates the power of Model Context Protocol (MCP)
@@ -15,13 +15,13 @@ In Part 1, we built a simple **Skill** that calculated premiums using hardcoded 
 ## Architecture Overview
 
 ```
-Premium Calculator Plugin
+Shipping Calculator Plugin
 ├── MCP Server (TypeScript)
-│   ├── Tools (calculate_premium, get_underwriting_recommendation)
-│   └── Resources (rate tables, underwriting guidelines)
+│   ├── Tools (calculate_shipping_cost, get_shipping_recommendation)
+│   └── Resources (rate tables, shipping rules)
 ├── Data Files
-│   ├── rate-tables.json (age brackets, health classes)
-│   └── underwriting-guidelines.json (risk factors, requirements)
+│   ├── rate-tables.json (distance brackets, service tiers)
+│   └── shipping-rules.json (package characteristics, surcharges)
 └── Claude Code Integration
 ```
 
@@ -32,27 +32,28 @@ Premium Calculator Plugin
 
 A full-featured MCP server with:
 - **3 Tools:**
-  - `calculate_premium` - Calculate premiums using external rate tables
-  - `get_underwriting_recommendation` - Assess risk and recommend health class
+  - `calculate_shipping_cost` - Calculate shipping costs using external rate tables
+  - `get_shipping_recommendation` - Assess package and recommend service tier
   - `get_rate_table_info` - Get version and effective dates
 - **2 Resources:**
   - `file:///rate-tables` - Complete rate table data
-  - `file:///underwriting-guidelines` - Full underwriting rules
+  - `file:///shipping-rules` - Full shipping rules and surcharges
 
 ### 2. Data Files
 **Location:** `data/`
 
 - **rate-tables.json** - Industry-realistic rate structures:
-  - 6 age brackets (18-80)
-  - 3 health classifications (Preferred, Standard, Substandard)
-  - Coverage limits and requirements
+  - 6 distance brackets (1-5000+ miles)
+  - 3 service tiers (Economy, Standard, Express)
+  - Weight limits and handling fees
 
-- **underwriting-guidelines.json** - Comprehensive underwriting rules:
-  - Risk factors (smoking, BMI, blood pressure)
-  - Occupation ratings
-  - Hobby risk assessments
-  - Coverage-specific test requirements
-  - Age-specific rules
+- **shipping-rules.json** - Comprehensive shipping rules:
+  - Package characteristics (fragility, perishability, size, hazmat)
+  - Destination factors (rural, residential, commercial, PO box)
+  - Seasonal factors
+  - Insurance options
+  - Weight tier surcharges
+  - Delivery options
 
 ### 3. Configuration
 - `package.json` - Node.js dependencies and scripts
@@ -127,7 +128,7 @@ Add this to your configuration (replace with your actual path):
 ```json
 {
   "mcpServers": {
-    "premium-calculator": {
+    "shipping-calculator": {
       "command": "node",
       "args": [
         "/absolute/path/to/02-plugin/dist/index.js"
@@ -149,86 +150,88 @@ In Claude Code, you can verify the server is running:
 List available MCP servers
 ```
 
-You should see `premium-calculator` in the list.
+You should see `shipping-calculator` in the list.
 
 ## Usage Examples
 
-### Example 1: Calculate Premium with External Data
+### Example 1: Calculate Shipping Cost with External Data
 
 ```
-Use the premium-calculator MCP server to calculate a premium for:
-- Age: 45
-- Coverage: $750,000
-- Health Class: standard
+Use the shipping-calculator MCP server to calculate shipping cost for:
+- Weight: 25 lbs
+- Distance: 450 miles
+- Service Tier: standard
 ```
 
 **What's happening behind the scenes:**
-1. Claude invokes the `calculate_premium` tool
+1. Claude invokes the `calculate_shipping_cost` tool
 2. The MCP server reads `rate-tables.json`
-3. Server finds the appropriate age bracket (41-50, rate $0.45)
-4. Applies standard health multiplier (1.0)
-5. Returns calculated premium
+3. Server finds the appropriate distance bracket (301-600 miles, rate $1.00)
+4. Applies standard tier multiplier (1.0)
+5. Calculates cost and adds handling fee
+6. Returns total cost
 
 **Response:**
 ```json
 {
   "success": true,
   "input": {
-    "age": 45,
-    "coverage": 750000,
-    "healthClass": "standard"
+    "weight": 25,
+    "distance": 450,
+    "serviceTier": "standard"
   },
   "result": {
-    "monthlyPremium": "337.50",
-    "annualPremium": "4050.00",
-    "baseRate": 0.45,
-    "healthMultiplier": 1.0,
-    "adjustedRate": 0.45
+    "totalCost": "117.50",
+    "shippingCost": "112.50",
+    "handlingFee": "5.00",
+    "baseRate": 1.0,
+    "tierMultiplier": 1.0,
+    "adjustedRate": 1.0,
+    "deliveryEstimate": "3-5 business days"
   },
   "rateTableVersion": "2026-Q1",
   "effectiveDate": "2026-01-01"
 }
 ```
 
-### Example 2: Get Underwriting Recommendation
+### Example 2: Get Shipping Recommendation
 
 ```
-Use the premium-calculator MCP server to get an underwriting recommendation for:
-- Age: 52
-- Coverage: $1,500,000
-- Risk Factors:
-  - Smoker: former_recent (quit 3 years ago)
-  - BMI: 28
-  - Blood Pressure: 135/85
-  - Occupation: software engineer
+Use the shipping-calculator MCP server to get a shipping recommendation for:
+- Weight: 75 lbs
+- Package Characteristics:
+  - Fragility: fragile
+  - Perishability: non_perishable
+  - Size: standard
+  - Hazmat: none
+  - Destination: residential
 ```
 
 **What's happening:**
-1. Claude invokes `get_underwriting_recommendation` tool
-2. Server reads `underwriting-guidelines.json`
-3. Evaluates each risk factor against guidelines
-4. Determines recommended health class
-5. Identifies required medical tests
-6. Calculates any additional adjustments
+1. Claude invokes `get_shipping_recommendation` tool
+2. Server reads `shipping-rules.json`
+3. Evaluates each package characteristic against rules
+4. Determines recommended service tier
+5. Calculates surcharges
+6. Identifies special requirements
 
 **Response:**
 ```json
 {
   "success": true,
   "recommendation": {
-    "recommendedClass": "standard",
-    "requiredTests": [
-      "comprehensive blood panel",
-      "EKG",
-      "urinalysis",
-      "blood pressure",
-      "height/weight"
+    "recommendedTier": "standard",
+    "totalSurcharges": 30.00,
+    "requirements": [
+      "Extra padding required",
+      "Fragile stickers on all sides",
+      "May require signature on delivery"
     ],
-    "additionalAdjustments": 1.0,
     "notes": [
-      "Recent former smoker - may qualify for standard",
-      "BMI 30-35 - standard classification",
-      "Stage 1 hypertension - standard classification"
+      "Heavy packages, may require team lift",
+      "Breakable items requiring special handling (glass, ceramics, electronics)",
+      "Standard or Express tier recommended for fragile items",
+      "Residential delivery address"
     ]
   }
 }
@@ -237,7 +240,7 @@ Use the premium-calculator MCP server to get an underwriting recommendation for:
 ### Example 3: Access Rate Table Information
 
 ```
-Use the premium-calculator MCP server to show me information about the current rate tables
+Use the shipping-calculator MCP server to show me information about the current rate tables
 ```
 
 **Response:**
@@ -246,33 +249,34 @@ Use the premium-calculator MCP server to show me information about the current r
   "success": true,
   "version": "2026-Q1",
   "effectiveDate": "2026-01-01",
-  "ageBrackets": 6,
-  "healthClasses": ["preferred", "standard", "substandard"],
-  "coverageRange": {
-    "minimum": 50000,
-    "maximum": 5000000
-  }
+  "distanceBrackets": 6,
+  "serviceTiers": ["economy", "standard", "express"],
+  "weightRange": {
+    "minimum": 1,
+    "maximum": 150
+  },
+  "baseHandlingFee": 5.00
 }
 ```
 
 ### Example 4: Read Resources Directly
 
 ```
-Read the rate-tables resource from the premium-calculator MCP server and explain the age bracket structure
+Read the rate-tables resource from the shipping-calculator MCP server and explain the distance bracket structure
 ```
 
 Claude will:
 1. Read the `file:///rate-tables` resource
 2. Parse the JSON structure
-3. Explain the age brackets and rate progression
+3. Explain the distance brackets and rate progression
 
 ## Comparison: Skill vs Plugin
 
 ### Part 1 Skill (Hardcoded)
 ```markdown
-## Age Brackets (hardcoded in prompt)
-- 18-30: $0.15
-- 31-40: $0.25
+## Distance Brackets (hardcoded in prompt)
+- 1-100 miles: $0.50
+- 101-300 miles: $0.75
 ...
 ```
 **Limitations:**
@@ -284,12 +288,12 @@ Claude will:
 ```typescript
 // Loads from external JSON file
 const rateTables = await loadRateTables();
-const bracket = rateTables.ageBrackets.find(...);
+const bracket = rateTables.distanceBrackets.find(...);
 ```
 **Advantages:**
 - ✅ Update rate tables without changing code
 - ✅ Access multiple data sources
-- ✅ Complex underwriting logic
+- ✅ Complex shipping logic
 - ✅ Multiple specialized tools
 - ✅ Version tracking and effective dates
 
@@ -311,7 +315,7 @@ This will watch for changes and recompile automatically.
 │   └── index.ts              # MCP server implementation
 ├── data/
 │   ├── rate-tables.json      # Rate data
-│   └── underwriting-guidelines.json  # Underwriting rules
+│   └── shipping-rules.json   # Shipping rules
 ├── dist/                     # Compiled JavaScript (generated)
 ├── tests/                    # Test files (to be added)
 ├── package.json
@@ -324,9 +328,10 @@ This will watch for changes and recompile automatically.
 ### Modifying Rate Tables
 
 Edit `data/rate-tables.json` to update:
-- Age brackets and base rates
-- Health class multipliers
-- Coverage limits
+- Distance brackets and base rates
+- Service tier multipliers
+- Weight limits
+- Handling fees
 - Effective dates
 
 The changes will be reflected immediately (no server restart needed for data files).
@@ -356,7 +361,7 @@ To add a new resource:
 - Take parameters
 - Perform actions
 - Return results
-- Example: `calculate_premium(age, coverage, healthClass)`
+- Example: `calculate_shipping_cost(weight, distance, serviceTier)`
 
 **Resources** (like files):
 - Claude can *read* them
@@ -383,16 +388,16 @@ To add a new resource:
 
 ### Manual Testing Checklist
 
-- [ ] Calculate premium for each age bracket
-- [ ] Test all health classes (preferred, standard, substandard)
-- [ ] Verify coverage limits (minimum/maximum)
-- [ ] Test underwriting recommendations with various risk factors
+- [ ] Calculate shipping cost for each distance bracket
+- [ ] Test all service tiers (economy, standard, express)
+- [ ] Verify weight limits (minimum/maximum)
+- [ ] Test shipping recommendations with various package characteristics
 - [ ] Verify rate table version is returned
-- [ ] Test error cases (invalid age, coverage, health class)
+- [ ] Test error cases (invalid weight, distance, service tier)
 
 ### Example Test Cases
 
-See `test-cases.md` (to be created) for comprehensive test scenarios.
+See `test-cases.md` for comprehensive test scenarios.
 
 ## Troubleshooting
 
@@ -411,8 +416,8 @@ See `test-cases.md` (to be created) for comprehensive test scenarios.
 - Verify JSON files are valid (use a JSON validator)
 
 ### Calculation errors
-- Validate input ranges (age 18-80, coverage >= $50,000)
-- Check health class spelling (case-insensitive but must match)
+- Validate input ranges (weight 1-150 lbs, distance >= 1 mile)
+- Check service tier spelling (case-insensitive but must match)
 
 ## Key Learnings
 
@@ -443,31 +448,32 @@ The Model Context Protocol enables:
 
 In **Part 3**, we'll build **Agent Teams** that coordinate multiple specialized agents:
 
-- **Underwriting Agent** - Assesses risk using our MCP plugin
-- **Pricing Agent** - Calculates premiums
-- **Proposal Agent** - Generates quote documents
+- **Package Assessment Agent** - Evaluates package characteristics using our MCP plugin
+- **Cost Calculation Agent** - Calculates shipping costs
+- **Quote Generation Agent** - Generates shipping quotes
 
 Each agent will use this MCP plugin as a shared resource!
 
 ## Educational Notes
 
-**Important:** This is a learning exercise. Real insurance systems involve:
-- Regulatory compliance
-- Actuarial analysis
-- Medical underwriting
-- Legal requirements
-- Data privacy considerations
-- Integration with legacy systems
+**Important:** This is a learning exercise. Real shipping systems involve:
+- Carrier integrations
+- Real-time rate shopping
+- Address validation
+- Package tracking
+- Customs and international shipping
+- Insurance and liability
+- Integration with e-commerce platforms
 
-This plugin demonstrates **concepts and patterns**, not production-ready insurance software.
+This plugin demonstrates **concepts and patterns**, not production-ready shipping software.
 
 ## Files Summary
 
 | File | Purpose |
 |------|---------|
 | `src/index.ts` | MCP server implementation |
-| `data/rate-tables.json` | Age brackets and health classes |
-| `data/underwriting-guidelines.json` | Risk factors and requirements |
+| `data/rate-tables.json` | Distance brackets and service tiers |
+| `data/shipping-rules.json` | Package characteristics and surcharges |
 | `package.json` | Dependencies and scripts |
 | `tsconfig.json` | TypeScript configuration |
 | `claude_desktop_config.json` | Example MCP configuration |

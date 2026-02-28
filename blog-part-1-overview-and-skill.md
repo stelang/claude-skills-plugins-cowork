@@ -29,7 +29,7 @@ Let me explain each one and how they relate:
 - Invoked by name during Claude Code sessions
 - Perfect for repetitive, well-defined tasks
 
-**Industry example:** A premium calculator that takes inputs (age, coverage amount, health class) and returns calculated premiums using predefined formulas.
+**Industry example:** A shipping cost calculator that takes inputs (weight, distance, service tier) and returns calculated shipping costs using predefined formulas.
 
 **When to use:** When you have a specific, repeatable task that doesn't require accessing external data or coordinating multiple steps.
 
@@ -46,11 +46,11 @@ Let me explain each one and how they relate:
 - Requires MCP server setup
 - More complex than Skills but much more powerful
 
-**Industry example:** An enhanced premium calculator that reads actual rate tables from Excel files, accesses underwriting guidelines from a database, or fetches real-time mortality data from an API.
+**Industry example:** An enhanced shipping calculator that reads actual carrier rate tables from JSON files, accesses package assessment rules from a database, or fetches real-time fuel surcharges from an API.
 
 **When to use:** When your task needs to access external data, files, or services that Skills alone cannot provide.
 
-**Relationship to Skills:** Plugins are like Skills on steroids. A Skill might calculate a premium using hardcoded formulas, while a Plugin can fetch the latest rate tables and use current data.
+**Relationship to Skills:** Plugins are like Skills on steroids. A Skill might calculate shipping cost using hardcoded formulas, while a Plugin can fetch the latest carrier rates and use current data.
 
 ---
 
@@ -65,14 +65,14 @@ Let me explain each one and how they relate:
 - Each agent can have its own skills/tools
 - Built-in orchestration and error handling
 
-**Industry example:** A quote generation system with three agents:
-- **Underwriting Agent**: Assesses applicant risk based on health history
-- **Pricing Agent**: Calculates premium using risk assessment
-- **Proposal Agent**: Generates professional quote document
+**Industry example:** A shipping quote generation system with three agents:
+- **Package Assessment Agent**: Evaluates package characteristics and special requirements
+- **Cost Calculation Agent**: Calculates shipping costs based on package assessment
+- **Quote Generation Agent**: Generates professional shipping quote document
 
 **When to use:** When a task naturally breaks into distinct subtasks that benefit from specialized focus, or when you need parallel processing of independent work streams.
 
-**Relationship to Plugins:** Agent Teams can use Plugins! Each agent in a team might have access to different MCP servers - the Underwriting Agent accesses medical databases, the Pricing Agent reads rate tables, etc.
+**Relationship to Plugins:** Agent Teams can use Plugins! Each agent in a team might have access to different MCP servers - the Package Assessment Agent accesses shipping rules databases, the Cost Calculation Agent reads carrier rate tables, etc.
 
 ---
 
@@ -89,12 +89,12 @@ Let me explain each one and how they relate:
 - Can run tasks in parallel for efficiency
 
 **Industry example:**
-- **Competitive Intelligence Analysis**: Analyzes 5 competitor rate sheets, identifies pricing gaps, creates Excel dashboard with charts and PowerPoint executive briefing
-- **Compliance Auditing**: Reviews 150 claims and 500 policies, flags violations, generates Word compliance report and Excel analytics
+- **Multi-Carrier Rate Shopping**: Analyzes 5 carrier rate sheets, identifies best options, creates Excel comparison dashboard with charts and PowerPoint executive briefing
+- **Logistics Optimization**: Reviews 150 shipments across multiple warehouses, identifies inefficiencies, generates Word optimization report and Excel cost analytics
 
 **When to use:** When you need to orchestrate complex business processes that involve multiple data sources, sophisticated analysis, and professional output generation.
 
-**Relationship to Agent Teams:** Cowork can be thought of as "Agent Teams on autopilot." While Agent Teams require you to define agents and coordination logic, Cowork intelligently orchestrates tasks for you. It's like having a senior project manager who automatically figures out what needs to be done and delegates appropriately.
+**Relationship to Agent Teams:** Cowork can be thought of as "Agent Teams on autopilot." While Agent Teams require you to define agents and coordination logic, Cowork intelligently orchestrates tasks for you. It's like having a senior logistics manager who automatically figures out what needs to be done and delegates appropriately.
 
 ---
 
@@ -102,47 +102,47 @@ Let me explain each one and how they relate:
 
 Here's the key insight: **these aren't competing tools - they're layers of increasing sophistication**.
 
-### Progression Example: Insurance Premium Quote
+### Progression Example: Shipping Cost Quote
 
 **Level 1 - Skill:**
 ```
-Input: Age=35, Coverage=$500K, Health Class=Preferred
-Output: Monthly Premium=$42.50
+Input: Weight=25 lbs, Distance=450 miles, Service Tier=Standard
+Output: Total Cost=$117.50
 ```
 Simple calculation, no external data needed.
 
 **Level 2 - Plugin:**
 ```
-Input: Age=35, Coverage=$500K, Health Class=Preferred
-Plugin fetches: Latest rate tables from database
-Plugin accesses: Current underwriting guidelines
-Output: Monthly Premium=$39.80 (based on current rates)
+Input: Weight=25 lbs, Distance=450 miles, Service Tier=Standard
+Plugin fetches: Latest carrier rate tables from database
+Plugin accesses: Current fuel surcharge data
+Output: Total Cost=$123.45 (based on current rates)
 ```
 Now using real, up-to-date data.
 
 **Level 3 - Agent Teams:**
 ```
-Underwriting Agent: Reviews health questionnaire → Risk Score=2
-Pricing Agent: Uses risk score + rate tables → Premium=$45.20
-Proposal Agent: Generates 3-page quote with coverage details
+Package Assessment Agent: Reviews package characteristics → Fragility=high, Surcharge=$15
+Cost Calculation Agent: Uses assessment + rate tables → Base Cost=$117.50
+Quote Generation Agent: Generates professional quote with insurance options
 Coordination: Sequential execution with data handoffs
 ```
 Multiple specialized agents working together.
 
 **Level 4 - Cowork:**
 ```
-Input: Applicant folder (medical records, financial docs, comparison requests)
+Input: Order folder (product details, destination addresses, special requirements)
 Cowork orchestrates:
-  - Medical history analysis
-  - Financial underwriting
-  - Competitor rate comparison
-  - Risk assessment
-  - Premium calculation
+  - Package dimension analysis
+  - Weight distribution calculation
+  - Multi-carrier rate comparison
+  - Route optimization
+  - Cost calculation
   - Quote generation
 Output:
-  - Professional quote proposal (Word)
+  - Professional shipping quote (Word)
   - Rate comparison spreadsheet (Excel)
-  - Executive summary presentation (PowerPoint)
+  - Cost savings presentation (PowerPoint)
 ```
 Full end-to-end business process automation.
 
@@ -190,10 +190,10 @@ Now that you understand how Skills, Plugins, Agent Teams, and Cowork relate to e
 
 **Part 1 (This Post):** Conceptual overview + **Building a Simple Skill**
 **Part 2:** Building a Plugin (MCP) that extends the Skill
-**Part 3:** Creating Agent Teams for quote generation
-**Part 4:** Cowork orchestration for competitive intelligence
+**Part 3:** Creating Agent Teams for shipping quote generation
+**Part 4:** Cowork orchestration for multi-carrier logistics optimization
 
-In the rest of this post, I'll show you how to build your first Skill - a simple insurance premium calculator.
+In the rest of this post, I'll show you how to build your first Skill - a simple shipping cost calculator.
 
 ---
 
@@ -201,134 +201,137 @@ In the rest of this post, I'll show you how to build your first Skill - a simple
 
 ### What We're Building
 
-A premium calculator Skill that:
-- Takes basic inputs (age, coverage amount, health class)
-- Calculates monthly and annual premiums
-- Uses realistic industry formulas
-- Returns formatted results
+A shipping cost calculator Skill that:
+- Takes basic inputs (weight, distance, service tier)
+- Calculates total shipping cost
+- Uses realistic logistics formulas
+- Returns formatted results with delivery estimates
 
 ### Why Start With a Skill?
 
 Skills are the foundation. Once you understand how to build a good Skill, you'll better understand how Plugins extend them, how Agent Teams coordinate them, and how Cowork orchestrates them.
 
-### The Skill: Insurance Premium Calculator
+### The Skill: Shipping Cost Calculator
 
 Let me show you the actual Skill implementation.
 
-**File: `.claude/skills/premium-calculator.md`**
+**File: `.claude/skills/shipping-calculator/SKILL.md`**
 
-```
+```markdown
 ---
-description: Calculate insurance premiums based on age, coverage amount, and health classification
+name: shipping-calculator
+description: Calculate shipping costs based on weight, distance, and service tier
 ---
 
-# Insurance Premium Calculator Skill
+# Shipping Cost Calculator Skill
 
-You are an insurance premium calculator. When invoked, you calculate life insurance premiums based on the following inputs:
+You are a shipping cost calculator. When invoked, you calculate shipping costs based on the following inputs:
 
 ## Required Inputs
-1. **Age** (integer, 18-80)
-2. **Coverage Amount** (dollar amount, minimum $50,000)
-3. **Health Class** (one of: Preferred, Standard, Substandard)
+1. **Weight** (pounds, 1-150 lbs)
+2. **Distance** (miles, minimum 1 mile)
+3. **Service Tier** (one of: Economy, Standard, Express)
 
-## Premium Calculation Formula
+## Shipping Cost Calculation Formula
 
-Use these base rates per $1,000 of coverage per month:
+Use these base rates per pound per 100 miles:
 
-### Age Brackets
-- 18-30: $0.15
-- 31-40: $0.25
-- 41-50: $0.45
-- 51-60: $0.85
-- 61-70: $1.50
-- 71-80: $2.50
+### Distance Brackets
+- 1-100 miles: $0.50
+- 101-300 miles: $0.75
+- 301-600 miles: $1.00
+- 601-1000 miles: $1.35
+- 1001-2000 miles: $1.75
+- 2001+ miles: $2.25
 
-### Health Class Multipliers
-- Preferred: 0.85 (15% discount)
-- Standard: 1.0 (no adjustment)
-- Substandard: 1.35 (35% surcharge)
+### Service Tier Multipliers
+- Economy: 0.80 (20% discount, 7-10 business days)
+- Standard: 1.0 (no adjustment, 3-5 business days)
+- Express: 1.50 (50% premium, 1-2 business days)
 
 ### Calculation Steps
 
-1. Determine age bracket base rate
-2. Calculate coverage in thousands: `coverage_thousands = coverage_amount / 1000`
-3. Apply health class multiplier: `adjusted_rate = base_rate * health_multiplier`
-4. Calculate monthly premium: `monthly_premium = coverage_thousands * adjusted_rate`
-5. Calculate annual premium: `annual_premium = monthly_premium * 12`
+1. Determine distance bracket base rate
+2. Calculate distance units: `distance_units = distance / 100`
+3. Apply service tier multiplier: `adjusted_rate = base_rate * tier_multiplier`
+4. Calculate shipping cost: `shipping_cost = weight * distance_units * adjusted_rate`
+5. Add base handling fee: `total_cost = shipping_cost + 5.00`
 
 ## Output Format
 
 Provide results in this exact format:
 
-PREMIUM CALCULATION RESULTS
+```
+SHIPPING COST CALCULATION
 ===========================
 Input Summary:
-  Age: [age]
-  Coverage Amount: $[coverage_amount formatted with commas]
-  Health Class: [health_class]
+  Weight: [weight] lbs
+  Distance: [distance] miles
+  Service Tier: [service_tier]
 
 Calculation Details:
-  Base Rate (per $1,000): $[base_rate]
-  Health Class Multiplier: [multiplier]
+  Base Rate (per lb per 100 mi): $[base_rate]
+  Service Tier Multiplier: [multiplier]
   Adjusted Rate: $[adjusted_rate]
+  Base Handling Fee: $5.00
 
-PREMIUMS:
-  Monthly: $[monthly_premium] (formatted to 2 decimals)
-  Annual: $[annual_premium] (formatted to 2 decimals)
-
+TOTAL SHIPPING COST: $[total_cost] (formatted to 2 decimals)
+Estimated Delivery: [delivery_estimate]
+```
 
 ## Validation Rules
 
-- Age must be between 18-80
-- Coverage must be at least $50,000
-- Health class must be exactly one of the three options (case-insensitive)
+- Weight must be between 1-150 lbs
+- Distance must be at least 1 mile
+- Service tier must be exactly one of the three options (case-insensitive)
 - If any validation fails, explain the error clearly
 
 ## Example
 
-**Input:** Age=35, Coverage=$500,000, Health Class=Preferred
+**Input:** Weight=25 lbs, Distance=450 miles, Service Tier=Standard
 
 **Calculation:**
-- Age bracket 31-40: base rate = $0.25
-- Coverage thousands = 500
-- Health multiplier = 0.85
-- Adjusted rate = 0.25 * 0.85 = $0.2125
-- Monthly = 500 * 0.2125 = $106.25
-- Annual = 106.25 * 12 = $1,275.00
+- Distance bracket 301-600: base rate = $1.00
+- Distance units = 450 / 100 = 4.5
+- Service multiplier = 1.0
+- Adjusted rate = 1.00 * 1.0 = $1.00
+- Shipping cost = 25 * 4.5 * 1.00 = $112.50
+- Total = 112.50 + 5.00 = $117.50
 
 **Output:**
-
-PREMIUM CALCULATION RESULTS
+```
+SHIPPING COST CALCULATION
 ===========================
 Input Summary:
-  Age: 35
-  Coverage Amount: $500,000
-  Health Class: Preferred
+  Weight: 25 lbs
+  Distance: 450 miles
+  Service Tier: Standard
 
 Calculation Details:
-  Base Rate (per $1,000): $0.25
-  Health Class Multiplier: 0.85
-  Adjusted Rate: $0.2125
+  Base Rate (per lb per 100 mi): $1.00
+  Service Tier Multiplier: 1.0
+  Adjusted Rate: $1.00
+  Base Handling Fee: $5.00
 
-PREMIUMS:
-  Monthly: $106.25
-  Annual: $1,275.00
+TOTAL SHIPPING COST: $117.50
+Estimated Delivery: 3-5 business days
+```
 ```
 
 ### How to Use This Skill
 
 1. **Create the skill file:**
    ```bash
-   mkdir -p .claude/skills
-   # Create premium-calculator.md with the content above
+   mkdir -p .claude/skills/shipping-calculator
+   # Create SKILL.md with the content above
    ```
 
 2. **Invoke in Claude Code:**
 
-   > Use the premium-calculator skill to calculate a quote for:
-   > - Age: 45
-   > - Coverage: $750,000
-   > - Health Class: Standard
+   > Use the shipping-calculator skill to calculate shipping cost for:
+   > - Weight: 50 lbs
+   > - Distance: 800 miles
+   > - Service Tier: Express
 
 3. **Claude will execute the skill and return results**
 
@@ -336,49 +339,41 @@ PREMIUMS:
 
 Let's create a test file to verify our skill works correctly:
 
-**File: `test-premium-calculator.md`**
+**File: `test-shipping-calculator.md`**
 
 ```markdown
-# Premium Calculator Skill Test Cases
+# Shipping Calculator Skill Test Cases
 
-## Test Case 1: Young, Preferred
-- Age: 25
-- Coverage: $250,000
-- Health Class: Preferred
-- Expected Monthly: ~$31.88
+## Test Case 1: Local Delivery, Economy
+- Weight: 10 lbs
+- Distance: 50 miles
+- Service Tier: Economy
+- Expected Total: $7.00
 
-## Test Case 2: Middle-aged, Standard
-- Age: 45
-- Coverage: $500,000
-- Health Class: Standard
-- Expected Monthly: $225.00
+## Test Case 2: Regional Delivery, Standard
+- Weight: 25 lbs
+- Distance: 450 miles
+- Service Tier: Standard
+- Expected Total: $117.50
 
-## Test Case 3: Senior, Substandard
-- Age: 68
-- Coverage: $100,000
-- Health Class: Substandard
-- Expected Monthly: $202.50
+## Test Case 3: Long Distance, Express
+- Weight: 15 lbs
+- Distance: 1200 miles
+- Service Tier: Express
+- Expected Total: $477.50
 
-## Test Case 4: Error - Age too young
-- Age: 15
-- Coverage: $100,000
-- Health Class: Standard
-- Expected: Error message about age requirement
+## Test Case 4: Error - Weight too heavy
+- Weight: 200 lbs
+- Distance: 500 miles
+- Service Tier: Standard
+- Expected: Error message about weight limit
 
-## Test Case 5: Error - Coverage too low
-- Age: 40
-- Coverage: $25,000
-- Health Class: Preferred
-- Expected: Error message about minimum coverage
+## Test Case 5: Error - Invalid service tier
+- Weight: 20 lbs
+- Distance: 500 miles
+- Service Tier: Premium
+- Expected: Error message about valid service tiers
 ```
-
-
-![claude code skill in action](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/6a7a6keji3cy3w0qgjbw.png)
-
-
-![claude code skill in action 2](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/oppj9qzupexnkfhvqomb.png)
-
-
 
 ---
 
@@ -386,14 +381,14 @@ Let's create a test file to verify our skill works correctly:
 
 From this example, you can see that a well-designed Skill has:
 
-1. **Clear purpose** - Does ONE thing well (calculates premiums)
+1. **Clear purpose** - Does ONE thing well (calculates shipping costs)
 2. **Defined inputs** - Explicit about what it needs
 3. **Validation** - Checks inputs before processing
 4. **Deterministic logic** - Same inputs = same outputs
 5. **Formatted output** - Consistent, readable results
 6. **Self-contained** - No external dependencies
 
-This is the foundation. In Part 2, we'll extend this with a Plugin that reads actual rate tables from files instead of using hardcoded formulas.
+This is the foundation. In Part 2, we'll extend this with a Plugin that reads actual carrier rate tables from files instead of using hardcoded formulas.
 
 ---
 
@@ -402,10 +397,11 @@ This is the foundation. In Part 2, we'll extend this with a Plugin that reads ac
 I've created a GitHub repository with all the code examples:
 
 ```
-insurance-ai-progression/
+shipping-ai-progression/
 ├── 01-skill/
-│   ├── .claude/skills/premium-calculator.md
+│   ├── .claude/skills/shipping-calculator/SKILL.md
 │   ├── test-cases.md
+│   ├── demo-script.md
 │   └── README.md
 ├── 02-plugin/              (Coming in Part 2)
 ├── 03-agent-teams/         (Coming in Part 3)
@@ -413,7 +409,7 @@ insurance-ai-progression/
 └── README.md
 ```
 
-**Repository:** [Link to your GitHub repo - we'll create this]
+**Repository:** [Link to your GitHub repo]
 
 ---
 
@@ -430,19 +426,19 @@ insurance-ai-progression/
 ## Coming Next
 
 In **Part 2**, we'll transform this Skill into a Plugin that:
-- Reads real rate tables from Excel files
-- Accesses underwriting guidelines from JSON
-- Fetches mortality data from an API
+- Reads real carrier rate tables from JSON files
+- Accesses package assessment rules
+- Fetches current fuel surcharges
 - Shows the power of MCP (Model Context Protocol)
 
-**Subscribe to follow along!** Drop a comment if you have questions or want to see specific insurance use cases covered.
+**Subscribe to follow along!** Drop a comment if you have questions or want to see specific logistics use cases covered.
 
 ---
 
 **About This Series:**
 I'm a developer exploring AI capabilities through practical industry examples. All data used is synthetic and educational. This series is designed to help developers understand when and how to use Claude's various capabilities.
 
-**Tags:** #AI #Claude #MachineLearning #Automation #MCP #AgenticAI
+**Tags:** #AI #Claude #MachineLearning #Automation #MCP #AgenticAI #Logistics #Shipping
 
 ---
 
