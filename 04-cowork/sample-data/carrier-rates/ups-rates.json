@@ -1,0 +1,65 @@
+{
+  "carrier": "UPS",
+  "description": "Reliable carrier with competitive Standard rates and excellent tracking",
+  "rate_structure": {
+    "distance_brackets": [
+      {
+        "min_miles": 1,
+        "max_miles": 100,
+        "base_rate_per_lb_per_100mi": 0.50
+      },
+      {
+        "min_miles": 101,
+        "max_miles": 300,
+        "base_rate_per_lb_per_100mi": 0.75
+      },
+      {
+        "min_miles": 301,
+        "max_miles": 600,
+        "base_rate_per_lb_per_100mi": 1.00
+      },
+      {
+        "min_miles": 601,
+        "max_miles": 1000,
+        "base_rate_per_lb_per_100mi": 1.35
+      },
+      {
+        "min_miles": 1001,
+        "max_miles": 2000,
+        "base_rate_per_lb_per_100mi": 1.75
+      },
+      {
+        "min_miles": 2001,
+        "max_miles": 99999,
+        "base_rate_per_lb_per_100mi": 2.25
+      }
+    ],
+    "service_tier_multipliers": {
+      "Economy": 0.80,
+      "Standard": 1.0,
+      "Express": 1.50
+    },
+    "base_handling_fee": 5.00,
+    "surcharges": {
+      "fragile": 14.00,
+      "signature_required": 5.50,
+      "residential_delivery": 5.00,
+      "high_value": 10.00
+    }
+  },
+  "service_areas": {
+    "all_states": true,
+    "excluded_regions": [],
+    "specialty_regions": ["Alaska", "Hawaii"],
+    "alaska_hawaii_surcharge": 28.00
+  },
+  "weight_limits": {
+    "max_weight_lbs": 150,
+    "oversize_threshold_inches": 108
+  },
+  "dimensional_weight": {
+    "enabled": true,
+    "dim_factor": 139,
+    "use_higher_of_actual_or_dimensional": true
+  }
+}

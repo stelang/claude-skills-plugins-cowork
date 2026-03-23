@@ -1,0 +1,72 @@
+{
+  "carrier": "Economy Freight",
+  "description": "Lowest cost option for non-urgent, non-fragile shipments",
+  "rate_structure": {
+    "distance_brackets": [
+      {
+        "min_miles": 1,
+        "max_miles": 100,
+        "base_rate_per_lb_per_100mi": 0.40
+      },
+      {
+        "min_miles": 101,
+        "max_miles": 300,
+        "base_rate_per_lb_per_100mi": 0.62
+      },
+      {
+        "min_miles": 301,
+        "max_miles": 600,
+        "base_rate_per_lb_per_100mi": 0.85
+      },
+      {
+        "min_miles": 601,
+        "max_miles": 1000,
+        "base_rate_per_lb_per_100mi": 1.15
+      },
+      {
+        "min_miles": 1001,
+        "max_miles": 2000,
+        "base_rate_per_lb_per_100mi": 1.50
+      },
+      {
+        "min_miles": 2001,
+        "max_miles": 99999,
+        "base_rate_per_lb_per_100mi": 1.95
+      }
+    ],
+    "service_tier_multipliers": {
+      "Economy": 1.0,
+      "Standard": 1.25,
+      "Express": null
+    },
+    "base_handling_fee": 3.50,
+    "surcharges": {
+      "fragile": null,
+      "signature_required": 7.00,
+      "residential_delivery": 6.00,
+      "high_value": 15.00
+    }
+  },
+  "service_areas": {
+    "all_states": true,
+    "excluded_regions": ["Alaska", "Hawaii"],
+    "specialty_regions": [],
+    "rural_surcharge": 8.00
+  },
+  "restrictions": {
+    "no_fragile_items": true,
+    "no_express_service": true,
+    "max_value_usd": 5000,
+    "delivery_time_days": "7-14"
+  },
+  "weight_limits": {
+    "max_weight_lbs": 100,
+    "oversize_threshold_inches": 72
+  },
+  "dimensional_weight": {
+    "enabled": false,
+    "dim_factor": null,
+    "use_higher_of_actual_or_dimensional": false
+  },
+  "notes": "Budget carrier. Does not handle fragile items. No Express service. Longer delivery times but lowest rates."
+}

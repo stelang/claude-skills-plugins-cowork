@@ -1,0 +1,210 @@
+{
+  "carrier_service_areas": {
+    "FedEx": {
+      "nationwide_coverage": true,
+      "all_50_states": true,
+      "alaska_hawaii_available": true,
+      "alaska_hawaii_surcharge": 25.00,
+      "rural_coverage": "Excellent",
+      "international_capability": true,
+      "specialty_areas": [
+        "Urban centers",
+        "Suburban areas",
+        "Rural delivery",
+        "Alaska/Hawaii"
+      ],
+      "service_strengths": [
+        "Express service reliability",
+        "Nationwide consistency",
+        "Premium handling"
+      ]
+    },
+
+    "UPS": {
+      "nationwide_coverage": true,
+      "all_50_states": true,
+      "alaska_hawaii_available": true,
+      "alaska_hawaii_surcharge": 28.00,
+      "rural_coverage": "Excellent",
+      "international_capability": true,
+      "specialty_areas": [
+        "Residential delivery",
+        "Suburban areas",
+        "Business districts"
+      ],
+      "service_strengths": [
+        "Standard service value",
+        "Tracking technology",
+        "Suburban coverage"
+      ]
+    },
+
+    "DHL": {
+      "nationwide_coverage": true,
+      "all_50_states": true,
+      "alaska_hawaii_available": true,
+      "alaska_hawaii_surcharge": 30.00,
+      "rural_coverage": "Good",
+      "international_capability": true,
+      "specialty_areas": [
+        "International connections",
+        "High-value items",
+        "Major metro areas"
+      ],
+      "service_strengths": [
+        "International network",
+        "High-value handling",
+        "Specialty services"
+      ],
+      "notes": "Signature included in all deliveries"
+    },
+
+    "Regional Express": {
+      "nationwide_coverage": false,
+      "regional_only": true,
+      "covered_states": [
+        "ME", "NH", "VT", "MA", "RI", "CT",
+        "NY", "NJ", "PA", "DE", "MD",
+        "OH", "MI", "IN", "IL", "WI",
+        "MN", "IA", "MO", "ND", "SD", "NE", "KS"
+      ],
+      "excluded_states": [
+        "CA", "TX", "FL", "AZ", "NV", "OR", "WA",
+        "CO", "NM", "UT", "ID", "MT", "WY",
+        "AK", "HI",
+        "AL", "AR", "GA", "KY", "LA", "MS",
+        "NC", "SC", "TN", "VA", "WV", "OK"
+      ],
+      "alaska_hawaii_available": false,
+      "rural_coverage": "Excellent in covered regions",
+      "international_capability": false,
+      "specialty_areas": [
+        "Northeast corridor",
+        "Midwest industrial",
+        "Great Lakes region"
+      ],
+      "service_strengths": [
+        "Best regional rates",
+        "Local expertise",
+        "Fast regional delivery"
+      ],
+      "notes": "Limited to Northeast and Midwest. Best pricing in covered areas."
+    },
+
+    "Economy Freight": {
+      "nationwide_coverage": true,
+      "all_50_states": false,
+      "excluded_states": ["AK", "HI"],
+      "alaska_hawaii_available": false,
+      "rural_coverage": "Limited",
+      "rural_surcharge": 8.00,
+      "international_capability": false,
+      "specialty_areas": [
+        "Major metro areas",
+        "Interstate highways",
+        "Large distribution centers"
+      ],
+      "service_strengths": [
+        "Lowest rates",
+        "Bulk shipping",
+        "Non-urgent delivery"
+      ],
+      "limitations": [
+        "No Alaska/Hawaii service",
+        "Limited rural coverage",
+        "No fragile item handling",
+        "No Express service",
+        "Longer delivery times (7-14 days)"
+      ]
+    }
+  },
+
+  "regional_recommendations": {
+    "northeast": {
+      "description": "ME, NH, VT, MA, RI, CT, NY, NJ, PA",
+      "best_carrier_by_tier": {
+        "Economy": "Regional Express",
+        "Standard": "Regional Express or UPS",
+        "Express": "FedEx"
+      },
+      "notes": "Regional Express offers best value in this region"
+    },
+
+    "midwest": {
+      "description": "OH, MI, IN, IL, WI, MN, IA, MO",
+      "best_carrier_by_tier": {
+        "Economy": "Regional Express or Economy Freight",
+        "Standard": "UPS or Regional Express",
+        "Express": "FedEx or UPS"
+      },
+      "notes": "Strong competition among carriers, good pricing"
+    },
+
+    "south": {
+      "description": "TX, FL, GA, NC, SC, TN, AL, LA, etc.",
+      "best_carrier_by_tier": {
+        "Economy": "Economy Freight",
+        "Standard": "UPS",
+        "Express": "FedEx"
+      },
+      "notes": "Regional Express not available, rely on national carriers"
+    },
+
+    "west": {
+      "description": "CA, OR, WA, AZ, NV, CO",
+      "best_carrier_by_tier": {
+        "Economy": "Economy Freight",
+        "Standard": "UPS",
+        "Express": "FedEx"
+      },
+      "notes": "Regional Express not available, FedEx strong in urban areas"
+    },
+
+    "alaska_hawaii": {
+      "description": "AK, HI",
+      "best_carrier_by_tier": {
+        "Economy": "Not recommended (use Standard)",
+        "Standard": "FedEx or UPS",
+        "Express": "FedEx"
+      },
+      "notes": "Significant surcharges apply. Only FedEx, UPS, DHL serve these areas.",
+      "surcharges": {
+        "FedEx": 25.00,
+        "UPS": 28.00,
+        "DHL": 30.00
+      }
+    }
+  },
+
+  "optimization_rules": {
+    "rule_1_geographic_preference": {
+      "description": "Prefer Regional Express for Northeast/Midwest when available",
+      "logic": "If destination in [NE/MW states] AND Regional Express serves area, consider Regional Express first for Economy/Standard tiers"
+    },
+
+    "rule_2_express_reliability": {
+      "description": "Prefer FedEx for Express shipments",
+      "logic": "For Express tier, FedEx generally offers best reliability even if slightly more expensive"
+    },
+
+    "rule_3_fragile_exclusions": {
+      "description": "Exclude Economy Freight for fragile items",
+      "logic": "If fragile=Yes, exclude Economy Freight from consideration"
+    },
+
+    "rule_4_value_based_selection": {
+      "description": "High-value items should use premium carriers",
+      "logic": "If value_usd > 1000, prefer FedEx/UPS/DHL over Economy Freight"
+    },
+
+    "rule_5_alaska_hawaii": {
+      "description": "Limited carriers for Alaska/Hawaii",
+      "logic": "If destination=AK or HI, only consider FedEx, UPS, DHL; add respective surcharges"
+    },
+
+    "rule_6_cost_optimization": {
+      "description": "Select lowest cost carrier that meets all requirements",
+      "logic": "After applying all business rules and exclusions, select carrier with lowest total cost"
+    }
+  }
+}

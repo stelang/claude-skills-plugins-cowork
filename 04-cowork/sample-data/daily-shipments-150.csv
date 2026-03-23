@@ -1,0 +1,151 @@
+shipment_id,destination_city,destination_state,weight_lbs,length_in,width_in,height_in,service_tier,contents,fragile,value_usd,distance_miles
+SH-001,Chicago,IL,25,18,14,10,Standard,Electronics,Yes,850,450
+SH-002,Phoenix,AZ,15,12,10,8,Express,Documents,No,50,1200
+SH-003,Portland,ME,50,24,20,16,Economy,Clothing,No,200,850
+SH-004,Miami,FL,8,10,8,6,Standard,Books,No,120,1100
+SH-005,Denver,CO,35,20,18,14,Standard,Home Goods,No,450,780
+SH-006,Seattle,WA,12,14,12,10,Express,Electronics,Yes,1200,950
+SH-007,Boston,MA,40,22,18,16,Economy,Sporting Goods,No,320,380
+SH-008,Austin,TX,18,16,14,12,Standard,Office Supplies,No,180,890
+SH-009,Atlanta,GA,30,20,16,12,Express,Medical Supplies,Yes,2500,650
+SH-010,San Diego,CA,22,18,16,10,Standard,Toys,No,280,1050
+SH-011,Philadelphia,PA,45,24,20,18,Standard,Furniture Parts,No,380,290
+SH-012,Las Vegas,NV,10,12,10,8,Express,Jewelry,Yes,3500,1150
+SH-013,Detroit,MI,55,26,22,20,Economy,Auto Parts,No,420,520
+SH-014,Nashville,TN,14,14,12,10,Standard,Musical Instruments,Yes,950,580
+SH-015,Portland,OR,28,18,16,14,Standard,Kitchen Appliances,No,340,1180
+SH-016,Charlotte,NC,32,20,18,14,Express,Computer Hardware,No,1850,720
+SH-017,Minneapolis,MN,20,16,14,12,Standard,Apparel,No,220,680
+SH-018,Tampa,FL,38,22,18,16,Economy,Garden Tools,No,190,1050
+SH-019,Sacramento,CA,16,14,12,10,Express,Pharmaceuticals,No,4200,1020
+SH-020,Cleveland,OH,42,24,20,16,Standard,Industrial Supplies,No,580,410
+SH-021,New Orleans,LA,26,18,16,12,Standard,Food Products,No,280,980
+SH-022,Salt Lake City,UT,19,16,14,12,Express,Electronics,Yes,1100,890
+SH-023,Raleigh,NC,35,20,18,16,Economy,Office Furniture,No,450,650
+SH-024,Milwaukee,WI,24,18,14,12,Standard,Hardware,No,310,540
+SH-025,Tucson,AZ,11,12,10,8,Standard,Books,No,95,1280
+SH-026,Albuquerque,NM,48,24,22,18,Economy,Building Materials,No,520,950
+SH-027,Fresno,CA,21,16,14,12,Express,Medical Equipment,Yes,5800,1090
+SH-028,Kansas City,MO,33,20,18,14,Standard,Toys,No,380,620
+SH-029,Long Beach,CA,17,14,12,10,Standard,Electronics,No,720,1040
+SH-030,Virginia Beach,VA,29,18,16,14,Express,Marine Equipment,No,1450,840
+SH-031,Oakland,CA,44,22,20,18,Economy,Household Goods,No,340,1070
+SH-032,Mesa,AZ,13,12,10,8,Standard,Crafts,No,160,1190
+SH-033,Omaha,NE,37,22,18,16,Standard,Agricultural Supplies,No,480,710
+SH-034,Colorado Springs,CO,23,18,14,12,Express,Sporting Goods,No,890,810
+SH-035,Wichita,KS,51,26,22,20,Economy,Machinery Parts,No,630,780
+SH-036,Arlington,TX,15,14,12,10,Standard,Documents,No,75,900
+SH-037,Bakersfield,CA,39,22,18,16,Standard,Food Equipment,No,550,1100
+SH-038,Aurora,CO,27,18,16,14,Express,Electronics,Yes,1320,790
+SH-039,Anaheim,CA,18,16,14,12,Standard,Toys,No,240,1030
+SH-040,Honolulu,HI,8,10,8,6,Express,Documents,No,120,2450
+SH-041,Santa Ana,CA,34,20,18,16,Economy,Textiles,No,290,1040
+SH-042,Corpus Christi,TX,22,18,14,12,Standard,Industrial Tools,No,410,1180
+SH-043,Riverside,CA,46,24,20,18,Standard,Furniture,No,680,1020
+SH-044,Lexington,KY,16,14,12,10,Express,Electronics,Yes,1580,560
+SH-045,Stockton,CA,31,20,16,14,Economy,Garden Supplies,No,210,1080
+SH-046,St. Paul,MN,25,18,16,12,Standard,Office Supplies,No,330,690
+SH-047,Cincinnati,OH,43,24,20,18,Standard,Building Materials,No,520,440
+SH-048,Pittsburgh,PA,19,16,14,12,Express,Medical Supplies,Yes,3200,380
+SH-049,Anchorage,AK,12,12,10,8,Express,Electronics,No,890,2950
+SH-050,Henderson,NV,36,22,18,16,Economy,Home Decor,No,380,1130
+SH-051,Greensboro,NC,28,18,16,14,Standard,Apparel,No,340,680
+SH-052,Plano,TX,14,14,12,10,Standard,Books,No,180,920
+SH-053,Newark,NJ,49,24,22,20,Economy,Warehouse Equipment,No,720,250
+SH-054,Lincoln,NE,21,16,14,12,Express,Computer Parts,No,1240,750
+SH-055,Orlando,FL,38,22,18,16,Standard,Theme Park Supplies,No,450,1020
+SH-056,Irvine,CA,17,14,12,10,Standard,Electronics,Yes,980,1050
+SH-057,Toledo,OH,41,22,20,18,Economy,Auto Accessories,No,310,460
+SH-058,Chula Vista,CA,26,18,16,14,Express,Medical Devices,Yes,4500,1060
+SH-059,Fort Wayne,IN,32,20,18,16,Standard,Manufacturing Parts,No,540,520
+SH-060,Jersey City,NJ,11,12,10,8,Standard,Documents,No,85,240
+SH-061,Durham,NC,47,24,22,18,Economy,Laboratory Equipment,No,880,670
+SH-062,St. Petersburg,FL,23,18,14,12,Standard,Marine Supplies,No,390,1070
+SH-063,Laredo,TX,35,20,18,16,Standard,Import Goods,No,620,1350
+SH-064,Buffalo,NY,18,16,14,12,Express,Electronics,Yes,1450,410
+SH-065,Madison,WI,29,18,16,14,Standard,Educational Materials,No,280,610
+SH-066,Lubbock,TX,52,26,22,20,Economy,Agricultural Equipment,No,740,980
+SH-067,Chandler,AZ,15,14,12,10,Standard,Tech Accessories,No,210,1210
+SH-068,Scottsdale,AZ,24,18,16,12,Express,Luxury Goods,Yes,5200,1200
+SH-069,Reno,NV,40,22,20,18,Standard,Gaming Equipment,No,890,980
+SH-070,Norfolk,VA,19,16,14,12,Standard,Naval Supplies,No,420,870
+SH-071,Winston-Salem,NC,33,20,18,16,Economy,Tobacco Products,No,380,690
+SH-072,North Las Vegas,NV,27,18,16,14,Standard,Construction Materials,No,460,1140
+SH-073,Irving,TX,16,14,12,10,Express,Electronics,No,1120,910
+SH-074,Chesapeake,VA,45,24,20,18,Standard,Marine Hardware,No,630,860
+SH-075,Gilbert,AZ,22,18,14,12,Standard,Home Improvement,No,320,1220
+SH-076,Hialeah,FL,31,20,16,14,Economy,Import Products,No,290,1130
+SH-077,Garland,TX,13,12,10,8,Standard,Documents,No,95,920
+SH-078,Fremont,CA,48,24,22,20,Standard,Tech Components,No,1850,1000
+SH-079,Boise,ID,25,18,16,12,Express,Electronics,Yes,1380,920
+SH-080,Richmond,VA,37,22,18,16,Standard,Historical Artifacts,Yes,2200,750
+SH-081,Baton Rouge,LA,20,16,14,12,Standard,Petroleum Products,No,340,1010
+SH-082,Des Moines,IA,42,24,20,18,Economy,Insurance Materials,No,420,720
+SH-083,Spokane,WA,28,18,16,14,Standard,Outdoor Equipment,No,480,1050
+SH-084,Tacoma,WA,17,14,12,10,Express,Port Equipment,No,1640,960
+SH-085,San Bernardino,CA,34,20,18,16,Standard,Logistics Supplies,No,390,1000
+SH-086,Modesto,CA,26,18,16,14,Economy,Agricultural Products,No,250,1120
+SH-087,Fontana,CA,44,22,20,18,Standard,Warehouse Materials,No,580,1010
+SH-088,Moreno Valley,CA,18,16,14,12,Standard,Distribution Goods,No,310,1040
+SH-089,Fayetteville,NC,39,22,18,16,Express,Military Supplies,No,1920,710
+SH-090,Worcester,MA,21,18,14,12,Standard,Educational Equipment,No,380,340
+SH-091,Columbus,GA,50,26,22,20,Economy,Textiles,No,440,720
+SH-092,Cape Coral,FL,14,14,12,10,Standard,Resort Supplies,No,290,1140
+SH-093,McKinney,TX,32,20,18,16,Standard,Retail Merchandise,No,520,930
+SH-094,Little Rock,AR,24,18,16,12,Express,Medical Equipment,Yes,3800,870
+SH-095,Oxnard,CA,46,24,20,18,Economy,Farm Equipment,No,620,1080
+SH-096,Amarillo,TX,19,16,14,12,Standard,Cattle Supplies,No,340,1020
+SH-097,Springfield,MO,36,22,18,16,Standard,Manufacturing Tools,No,580,720
+SH-098,Grand Rapids,MI,27,18,16,14,Express,Furniture Components,No,1280,590
+SH-099,Huntington Beach,CA,15,14,12,10,Standard,Beach Equipment,No,230,1050
+SH-100,Mobile,AL,41,22,20,18,Standard,Port Supplies,No,490,980
+SH-101,Knoxville,TN,23,18,14,12,Economy,Regional Products,No,310,620
+SH-102,Providence,RI,38,22,18,16,Standard,Jewelry Components,Yes,2800,320
+SH-103,Grand Prairie,TX,16,14,12,10,Standard,Electronics,No,720,920
+SH-104,Brownsville,TX,29,20,16,14,Express,Border Trade Goods,No,1480,1450
+SH-105,Santa Clarita,CA,47,24,22,18,Economy,Entertainment Equipment,No,680,1070
+SH-106,Overland Park,KS,20,16,14,12,Standard,Office Products,No,290,630
+SH-107,Garden Grove,CA,34,20,18,16,Standard,Nursery Supplies,No,410,1040
+SH-108,Oceanside,CA,25,18,16,12,Express,Marine Products,Yes,1950,1080
+SH-109,Chattanooga,TN,43,24,20,18,Standard,Railroad Supplies,No,620,590
+SH-110,Fort Lauderdale,FL,18,16,14,12,Standard,Cruise Supplies,No,340,1150
+SH-111,Rancho Cucamonga,CA,31,20,18,16,Economy,Warehouse Goods,No,380,990
+SH-112,Ontario,CA,26,18,16,14,Standard,Logistics Equipment,No,450,1000
+SH-113,Vancouver,WA,40,22,20,18,Standard,Import Materials,No,560,1020
+SH-114,Tempe,AZ,14,14,12,10,Express,University Supplies,No,980,1210
+SH-115,Eugene,OR,48,24,22,20,Economy,Lumber Products,No,520,1220
+SH-116,Lancaster,CA,22,18,14,12,Standard,Aerospace Parts,No,1680,1090
+SH-117,Corona,CA,35,20,18,16,Standard,Manufacturing Components,No,490,1020
+SH-118,Palmdale,CA,19,16,14,12,Express,Defense Equipment,Yes,3400,1100
+SH-119,Salinas,CA,28,18,16,14,Economy,Agricultural Produce,No,280,1150
+SH-120,Hayward,CA,45,24,20,18,Standard,Bay Area Supplies,No,640,1010
+SH-121,Alexandria,VA,17,14,12,10,Standard,Government Materials,No,520,780
+SH-122,Lakewood,CO,33,20,18,16,Express,Mountain Equipment,No,1340,800
+SH-123,Hollywood,FL,24,18,16,12,Standard,Entertainment Goods,No,380,1140
+SH-124,Macon,GA,41,22,20,18,Economy,Distribution Materials,No,410,710
+SH-125,Kansas City,KS,21,16,14,12,Standard,Midwest Products,No,350,640
+SH-126,Clarksville,TN,37,22,18,16,Standard,Military Base Supplies,No,580,650
+SH-127,Thornton,CO,26,18,16,14,Express,Electronics,Yes,1520,790
+SH-128,Sunnyvale,CA,15,14,12,10,Standard,Silicon Valley Tech,No,1850,1020
+SH-129,Pasadena,TX,49,26,22,20,Economy,Refinery Equipment,No,720,940
+SH-130,Mesquite,TX,23,18,14,12,Standard,Suburban Supplies,No,320,930
+SH-131,Savannah,GA,36,22,18,16,Standard,Port Export Goods,No,540,780
+SH-132,Orange,CA,18,16,14,12,Express,County Supplies,No,1180,1040
+SH-133,Fullerton,CA,30,20,16,14,Standard,Educational Materials,No,420,1050
+SH-134,McAllen,TX,44,24,20,18,Economy,Border Commerce,No,480,1480
+SH-135,Pasadena,CA,20,16,14,12,Standard,Cultural Items,Yes,2400,1060
+SH-136,Killeen,TX,52,26,22,20,Standard,Fort Hood Supplies,No,680,850
+SH-137,Hampton,VA,27,18,16,14,Express,Naval Equipment,No,1740,850
+SH-138,Warren,MI,39,22,18,16,Standard,Automotive Parts,No,580,510
+SH-139,Bellevue,WA,16,14,12,10,Standard,Tech Supplies,No,920,970
+SH-140,West Valley City,UT,32,20,18,16,Economy,Mountain Region Goods,No,390,880
+SH-141,Columbia,SC,25,18,16,12,Standard,State Capital Supplies,No,410,720
+SH-142,Olathe,KS,42,24,20,18,Standard,Metro Supplies,No,540,650
+SH-143,Sterling Heights,MI,19,16,14,12,Express,Auto Components,No,1450,520
+SH-144,New Haven,CT,35,20,18,16,Standard,University Equipment,No,680,280
+SH-145,Miramar,FL,28,18,16,14,Economy,South Florida Goods,No,310,1120
+SH-146,Waco,TX,46,24,22,18,Standard,Central Texas Products,No,520,880
+SH-147,Thousand Oaks,CA,21,18,14,12,Express,Biotech Materials,Yes,4800,1090
+SH-148,Frisco,TX,34,20,18,16,Standard,Suburban Commerce,No,480,940
+SH-149,Cedar Rapids,IA,24,18,16,12,Standard,Corn Belt Supplies,No,360,710
+SH-150,Visalia,CA,38,22,18,16,Economy,Valley Agriculture,No,420,1140

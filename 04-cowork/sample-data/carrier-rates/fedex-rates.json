@@ -1,0 +1,65 @@
+{
+  "carrier": "FedEx",
+  "description": "Premium carrier with excellent Express service and nationwide coverage",
+  "rate_structure": {
+    "distance_brackets": [
+      {
+        "min_miles": 1,
+        "max_miles": 100,
+        "base_rate_per_lb_per_100mi": 0.55
+      },
+      {
+        "min_miles": 101,
+        "max_miles": 300,
+        "base_rate_per_lb_per_100mi": 0.80
+      },
+      {
+        "min_miles": 301,
+        "max_miles": 600,
+        "base_rate_per_lb_per_100mi": 1.05
+      },
+      {
+        "min_miles": 601,
+        "max_miles": 1000,
+        "base_rate_per_lb_per_100mi": 1.40
+      },
+      {
+        "min_miles": 1001,
+        "max_miles": 2000,
+        "base_rate_per_lb_per_100mi": 1.80
+      },
+      {
+        "min_miles": 2001,
+        "max_miles": 99999,
+        "base_rate_per_lb_per_100mi": 2.30
+      }
+    ],
+    "service_tier_multipliers": {
+      "Economy": 0.85,
+      "Standard": 1.0,
+      "Express": 1.45
+    },
+    "base_handling_fee": 5.50,
+    "surcharges": {
+      "fragile": 15.00,
+      "signature_required": 5.00,
+      "residential_delivery": 4.50,
+      "high_value": 8.00
+    }
+  },
+  "service_areas": {
+    "all_states": true,
+    "excluded_regions": [],
+    "specialty_regions": ["Alaska", "Hawaii"],
+    "alaska_hawaii_surcharge": 25.00
+  },
+  "weight_limits": {
+    "max_weight_lbs": 150,
+    "oversize_threshold_inches": 96
+  },
+  "dimensional_weight": {
+    "enabled": true,
+    "dim_factor": 139,
+    "use_higher_of_actual_or_dimensional": true
+  }
+}

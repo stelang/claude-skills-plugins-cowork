@@ -1,0 +1,11 @@
+shipment_id,destination_city,destination_state,weight_lbs,length_in,width_in,height_in,service_tier,contents,fragile,value_usd,distance_miles
+SH-001,Chicago,IL,25,18,14,10,Standard,Electronics,Yes,850,450
+SH-002,Phoenix,AZ,15,12,10,8,Express,Documents,No,50,1200
+SH-003,Portland,ME,50,24,20,16,Economy,Clothing,No,200,850
+SH-004,Miami,FL,8,10,8,6,Standard,Books,No,120,1100
+SH-005,Denver,CO,35,20,18,14,Standard,Home Goods,No,450,780
+SH-006,Seattle,WA,12,14,12,10,Express,Electronics,Yes,1200,950
+SH-007,Boston,MA,40,22,18,16,Economy,Sporting Goods,No,320,380
+SH-008,Austin,TX,18,16,14,12,Standard,Office Supplies,No,180,890
+SH-009,Atlanta,GA,30,20,16,12,Express,Medical Supplies,Yes,2500,650
+SH-010,San Diego,CA,22,18,16,10,Standard,Toys,No,280,1050

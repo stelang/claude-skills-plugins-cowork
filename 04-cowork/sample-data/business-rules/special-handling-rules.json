@@ -1,0 +1,175 @@
+{
+  "special_handling_rules": {
+    "fragile_items": {
+      "description": "Items marked as fragile require special handling",
+      "applies_when": "fragile field = 'Yes'",
+      "requirements": {
+        "excluded_carriers": ["Economy Freight"],
+        "recommended_carriers": ["FedEx", "UPS", "DHL"],
+        "minimum_surcharge": 12.00,
+        "packaging_requirements": "Double-box with cushioning material",
+        "insurance_recommended": true
+      },
+      "delivery_instructions": "Handle with care, do not stack heavy items on top"
+    },
+
+    "high_value_items": {
+      "description": "High-value items require enhanced security",
+      "applies_when": "value_usd > 1000",
+      "requirements": {
+        "signature_required": true,
+        "recommended_carriers": ["FedEx", "UPS", "DHL"],
+        "insurance_required": true,
+        "tracking_enhanced": true,
+        "delivery_confirmation": "Adult signature required"
+      },
+      "thresholds": {
+        "moderate_value": 1000,
+        "high_value": 5000,
+        "very_high_value": 10000
+      }
+    },
+
+    "dimensional_weight": {
+      "description": "Large but lightweight packages may be charged by dimensional weight",
+      "applies_when": "(length × width × height) / dim_factor > actual_weight",
+      "calculation": {
+        "dim_factor_standard": 139,
+        "dim_factor_economy_freight": 166,
+        "use_higher_of": ["actual_weight", "dimensional_weight"]
+      },
+      "carriers_using_dim_weight": ["FedEx", "UPS", "DHL", "Regional Express"]
+    },
+
+    "medical_supplies": {
+      "description": "Medical supplies and pharmaceuticals",
+      "applies_when": "contents contains 'Medical' or 'Pharmaceutical'",
+      "requirements": {
+        "temperature_controlled": true,
+        "expedited_handling": true,
+        "recommended_service_tier": "Express",
+        "chain_of_custody": true,
+        "recommended_carriers": ["FedEx", "UPS", "DHL"]
+      }
+    },
+
+    "electronics": {
+      "description": "Electronic items require careful handling",
+      "applies_when": "contents contains 'Electronics' or 'Computer'",
+      "requirements": {
+        "static_protection": true,
+        "moisture_protection": true,
+        "fragile_handling": true,
+        "insurance_recommended_threshold": 500,
+        "original_packaging_preferred": true
+      }
+    },
+
+    "documents": {
+      "description": "Document shipments",
+      "applies_when": "contents = 'Documents'",
+      "requirements": {
+        "waterproof_envelope": true,
+        "signature_for_confidential": true,
+        "all_carriers_acceptable": true
+      },
+      "optimization_note": "Often cheapest via Express service due to low weight"
+    },
+
+    "oversize_items": {
+      "description": "Packages exceeding standard size limits",
+      "applies_when": "any dimension > 48 inches or total dimensions > 96 inches",
+      "requirements": {
+        "excluded_carriers": ["Economy Freight"],
+        "additional_handling_fee": 25.00,
+        "special_equipment_required": true,
+        "advance_notice_required": true
+      },
+      "dimension_limits": {
+        "fedex_max": 119,
+        "ups_max": 108,
+        "dhl_max": 96,
+        "regional_express_max": 84,
+        "economy_freight_max": 72
+      }
+    },
+
+    "hazardous_materials": {
+      "description": "Items classified as hazardous materials",
+      "applies_when": "contents contains 'Hazmat' or specific hazmat classifications",
+      "requirements": {
+        "certified_carriers_only": ["FedEx", "UPS"],
+        "special_labeling_required": true,
+        "documentation_required": true,
+        "additional_surcharge": 35.00,
+        "advance_declaration": true
+      }
+    },
+
+    "perishable_items": {
+      "description": "Food or other perishable goods",
+      "applies_when": "contents contains 'Food' or 'Perishable'",
+      "requirements": {
+        "max_transit_time_hours": 48,
+        "required_service_tier": "Express",
+        "temperature_controlled": true,
+        "weekend_delivery_excluded": true,
+        "recommended_carriers": ["FedEx", "UPS"]
+      }
+    }
+  },
+
+  "carrier_restrictions": {
+    "economy_freight": {
+      "cannot_handle": [
+        "Fragile items",
+        "High-value items (>$5000)",
+        "Express service",
+        "Oversize items",
+        "Hazardous materials",
+        "Perishable items"
+      ],
+      "best_for": [
+        "Non-urgent shipments",
+        "Durable goods",
+        "Cost-sensitive deliveries"
+      ]
+    },
+
+    "regional_express": {
+      "geographic_limitations": "Northeast and Midwest only",
+      "cannot_handle": [
+        "Alaska shipments",
+        "Hawaii shipments",
+        "West Coast deliveries",
+        "South deliveries (TX, FL, etc.)"
+      ],
+      "best_for": [
+        "Regional deliveries in covered areas",
+        "Cost-effective Standard service",
+        "Midwest manufacturing distribution"
+      ]
+    }
+  },
+
+  "service_tier_requirements": {
+    "economy": {
+      "delivery_time_days": "7-10 business days",
+      "suitable_for": ["Non-urgent shipments", "Cost-sensitive customers"],
+      "not_suitable_for": ["Time-sensitive items", "Fragile items via Economy Freight"]
+    },
+
+    "standard": {
+      "delivery_time_days": "3-5 business days",
+      "suitable_for": ["Most general shipments", "Balanced cost and speed"],
+      "most_popular": true
+    },
+
+    "express": {
+      "delivery_time_days": "1-2 business days",
+      "suitable_for": ["Urgent shipments", "High-value items", "Perishables"],
+      "premium_pricing": true,
+      "guaranteed_delivery": true
+    }
+  }
+}
